@@ -6,7 +6,8 @@ from congress.views import updateDB
 def start():
     scheduler = BackgroundScheduler()
     scheduler.add_jobstore(DjangoJobStore(), 'djangojobstore')
-    scheduler.add_job(updateDB, 'interval', seconds=1200)
+    # Updates database every 24 hours
+    scheduler.add_job(updateDB, 'interval', days=1)
 
     register_events(scheduler)
 

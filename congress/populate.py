@@ -10,6 +10,7 @@ from django.db.models import Q
 import json
 import time
 import datetime
+import logging
 
 # Get or Create Ticker Object
 def getTicker(stockTicker):
@@ -135,13 +136,14 @@ def updateDB(data):
                 pdf=False, 
                 ptrLink=source
             )
+            # update congress person object
+            congressPerson.updateStats()
+
         except Exception as e:
-            print(e)
+            # There is an overlap in dates, so a UNIQUE constraint error will be thrown, but should be ignored
+            logging.error(e)
             print("ERROR: " + str(name))
             continue
-
-        print("Done one")
-
 
 def historical():
     # Load historical data  

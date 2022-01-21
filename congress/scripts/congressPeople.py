@@ -126,7 +126,6 @@ def getDetails(response):
             termsServed = objs[i]["terms"]
 
             data.append(CongressPerson(bioguide=bioguide, firstName=firstName, lastName=lastName, fullName=fullName, currentState=state, currentParty=party, currentChamber=chamber, image=imageURL, termsServed=termsServed))
-            print("done")
         except Exception as e:
             print(e)
             continue

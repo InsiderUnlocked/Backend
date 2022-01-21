@@ -231,9 +231,9 @@ class CongressTrade(models.Model):
         return self.name.fullName
     
 
-    # class Meta:
-    #     unique_together = ('disclosureDate', 'transactionDate', 'owner', 'ticker', 'assetDescription', 'assetType', 'transactionType', 'amount', 'comment', 'name', 'pdf', 'ptrLink')
-    #     ordering = ["-transactionDate"]
+    class Meta:
+        unique_together = ('disclosureDate', 'transactionDate', 'owner', 'ticker', 'assetDescription', 'assetType', 'transactionType', 'amount', 'comment', 'name', 'pdf', 'ptrLink')
+        ordering = ["-transactionDate"]
 
 
 # Summary of all transactions 
@@ -253,7 +253,7 @@ class SummaryStat(models.Model):
 
     # Update congress persons transaction count every time the object is saved 
     def updateStats(self):
-        transactions = CongressTrade.objects.filter(transactionDate__lte=datetime.datetime.today(), transactionDate__gt=datetime.datetime.today()-datetime.timedelta(days=90))
+        transactions = CongressTrade.objects.filter(transactionDate__lte=datetime.datetime.today(), transactionDate__gt=datetime.datetime.today()-datetime.timedelta(days=self.timeframe))
 
         # Get the number of transactions by congress person
         total = transactions.count()

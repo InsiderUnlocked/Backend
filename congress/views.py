@@ -23,68 +23,28 @@ import logging
 
 def updateDB(): 
     # Look at at each table, if any table is empty, populate it with historical data
-    print("started update")
-    # Ticker = Ticker.objects.all()
-    congressPersonObjs = CongressPerson.objects.all()
-    congressTradeObjs = CongressTrade.objects.all()
-    # summaryStatObjs = SummaryStat.objects.all()
+    logging.info("started update")
 
-    if len(congressPersonObjs) == 0 or len(congressTradeObjs) == 0:
-        # Add/Update CongressPerson Table (Get all members)
-        try: 
-            updateCongressPersonMain()
-        except: 
-            logging.error("ERROR: updating CongressPerson table")
+    # If none of the tables are empty update it with current data
+    try: 
+        currentPopulate()
+        logging.info("Finished populating recent congress trades")
 
-        try: 
-            historicalPopulate()
-        except: 
-            logging.error("ERROR: updating Historical CongressTrades table")
+    except: 
+        logging.error("ERROR: updating CongressPerson table")
 
-        try: 
-            currentPopulate()
-        except: 
-            logging.error("ERROR: updating Current CongressTrades table")
+    try:
+        # Get all summaryStats
+        summaryStats = SummaryStat.objects.all()
 
-        try: 
-            currentPopulate()
-        except: 
-            logging.error("ERROR: updating Current CongressTrades table")
+        # For each summaryStat, update the stats
+        for summaryStat in summaryStats:
+            summaryStat.updateStats()
 
-        try:
-            call_command('loaddata', 'ticker.json', verbosity=3, interactive=False)
-        except:
-            logging.error("ERROR: updating Tickers table")
-        
-        # Create Summary  Stats
-        try:
-            SummaryStats.objects.create(timeframe=30)
-            SummaryStats.objects.create(timeframe=60)
-            SummaryStats.objects.create(timeframe=90)
-            SummaryStats.objects.create(timeframe=120)
-        except:
-            logging.error("ERROR: creating Summary Stats table")
-
-        print("Database Updated")
-    else:
-        # If none of the tables are empty update it with current data
-        try: 
-            currentPopulate()
-        except: 
-            logging.error("ERROR: updating CongressPerson table")
-
-        try:
-            # Get all summaryStats
-            summaryStats = SummaryStat.objects.all()
-
-            # For each summaryStat, update the stats
-            for summaryStat in summaryStats:
-                summaryStat.updateSummaryStats()
-
-        except:
-            logging.error("ERROR: updating Summary Stats table")
-        
-        print("Database Updated")
+    except:
+        logging.error("ERROR: updating Summary Stats table")
+    
+    logging.info("Database Updated")
     
 
 
@@ -138,7 +98,7 @@ class TickerViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # Query Database for the ticker id  
         ticker = Ticker.objects.get(ticker=self.kwargs['ticker'])
-        keywords = self.request.query_params.get('search')
+        keywords = self.request.query_params.get('  ')
         transactionType = self.request.query_params.get('transactionType')
 
         if keywords is not None or transactionType is not None:
@@ -186,17 +146,17 @@ class CongressPersonViewSet(viewsets.ModelViewSet):
     # filter by slug in url in django rest framework modelviewset
     def get_queryset(self):
         # Get the name that was passed in the URL
-        congressPerson = self.kwargs['name']
+        name = self.kwargs['name']
         ticker = self.request.query_params.get('ticker')
 
         # Parse slug into first and last name
-        firstName = congressPerson.split()[0]
-        lastName = congressPerson.split()[-1]
+        firstName = name.split()[0]
+        lastName = name.split()[-1]
 
         # Get the id of the congress person passed into the URL 
         # Django Search-Bar-Like Functionality to match a name to a congress person object from the database
         # https://docs.djangoproject.com/en/dev/ref/contrib/admin/#django.contrib.admin.ModelAdmin.search_fields
-        congressPerson = CongressPerson.objects.filter(
+        queryset = CongressPerson.objects.filter(
             Q(fullName__icontains=name) | 
             Q(firstName__icontains=name) | 
             Q(lastName__icontains=name) |
@@ -211,7 +171,7 @@ class CongressPersonViewSet(viewsets.ModelViewSet):
         ).first()
 
         # Get all transactions by congress person
-        queryset = CongressTrade.objects.filter(name=name)
+        # queryset = CongressTrade.objects.filter(name=name)
     
         if ticker is not None:
             queryset = queryset.filter(ticker__ticker__icontains=ticker)
@@ -299,35 +259,11 @@ class CongressStatsViewSet(viewsets.ModelViewSet):
         return self.get_paginated_response(serializer.data)
 
 
-# TODO: Summary Stats -- Still a Work in Progress
 # government/summary-stats endpoint
 class SummaryStatsViewSet(viewsets.ModelViewSet):
     # Permission needed to access endpoint
     permission_classes = (permissions.AllowAny,)
-    # URL parameter passed into url that also exists in the CongressTrade and CongressPerson models 
-    lookup_field = 'timeframe'
     # Initiliazing our seializer class
     serializer_class = CongressPersonSerializer
-    
-    # filter by slug in url in django rest framework modelviewset
-    def get_queryset(self):
-        timeframe = self.kwargs['timeframe']
-
-        queryset = SummaryStat.objects.filter(timeframe=timeframe)
-
-        return queryset
-
-
-    # Serialize and Paginate the data    
-    def retrieve(self, request, *args, **kwargs):
-        # Get the queried data
-        result = self.get_queryset()
-
-        # Paginate the data
-        result_page = self.paginate_queryset(result)
-        
-        # Serialize the data - (convert to JSON)
-        serializer = SummaryStatSerializer(result_page, many=True)
-
-        return self.get_paginated_response(serializer.data)
-
+    # Querying the database for all of the congress people    
+    queryset = SummaryStat.objects.all()
