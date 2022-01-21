@@ -7,8 +7,8 @@ class CongressConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'congress'
 
-    # def ready(self):
-    #     if settings.SCHEDULER_DEFAULT:
-    #         from api import operator
-    #         operator.start()
+    def ready(self):
+        if settings.SCHEDULER_DEFAULT:
+            from api import operator
+            operator.start()
 
