@@ -57,7 +57,7 @@ $ python manage.py populateDB
 
 Run Server
 ```console
-$ python manage.py populateDB
+$ python manage.py runserver
 ```
 
 # Documentation
