@@ -21,8 +21,7 @@ from django.conf.urls.static import static
 
 # URL paths
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('congress.urls')),
     url(r'^admin/', include('admin_honeypot.urls', namespace='admin_honeypot')),
     path('aprivatesocialmeet/', admin.site.urls),
+    path('', include('congress.urls')),
 ]

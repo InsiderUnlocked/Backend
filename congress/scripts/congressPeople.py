@@ -126,6 +126,7 @@ def getDetails(response):
             termsServed = objs[i]["terms"]
 
             data.append(CongressPerson(bioguide=bioguide, firstName=firstName, lastName=lastName, fullName=fullName, currentState=state, currentParty=party, currentChamber=chamber, image=imageURL, termsServed=termsServed))
+            print("done one")
         except Exception as e:
             # There are two states that dont appear to be an acctual state. When we searched it up we couldnt find anything. This execption is to handle that error for historical congress memebers.
             continue

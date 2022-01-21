@@ -137,11 +137,6 @@ class CongressPersonViewSet(viewsets.ModelViewSet):
     lookup_field = 'name'
     # Initiliazing our seializer class
     serializer_class = CongressTradeSerializer
-
-    # Adding Logic to filter the data
-    # filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    # filterset_fields = ['ticker']
-    # search_fields = ['ticker']
         
     # filter by slug in url in django rest framework modelviewset
     def get_queryset(self):
@@ -156,26 +151,18 @@ class CongressPersonViewSet(viewsets.ModelViewSet):
         # Get the id of the congress person passed into the URL 
         # Django Search-Bar-Like Functionality to match a name to a congress person object from the database
         # https://docs.djangoproject.com/en/dev/ref/contrib/admin/#django.contrib.admin.ModelAdmin.search_fields
-        queryset = CongressPerson.objects.filter(
-            Q(fullName__icontains=name) | 
-            Q(firstName__icontains=name) | 
-            Q(lastName__icontains=name) |
+        congressPerson = CongressPerson.objects.filter(fullName__icontains=name).first()
 
-            Q(fullName__icontains=firstName) | 
-            Q(firstName__icontains=firstName) | 
-            Q(lastName__icontains=firstName) |
-
-            Q(fullName__icontains=lastName) | 
-            Q(firstName__icontains=lastName) | 
-            Q(lastName__icontains=lastName)
-        ).first()
+        print(congressPerson)
 
         # Get all transactions by congress person
-        # queryset = CongressTrade.objects.filter(name=name)
+        queryset = CongressTrade.objects.filter(name=congressPerson)
     
         if ticker is not None:
             queryset = queryset.filter(ticker__ticker__icontains=ticker)
             print(queryset)
+        
+        print(queryset)
 
         return queryset
 
@@ -264,6 +251,6 @@ class SummaryStatsViewSet(viewsets.ModelViewSet):
     # Permission needed to access endpoint
     permission_classes = (permissions.AllowAny,)
     # Initiliazing our seializer class
-    serializer_class = CongressPersonSerializer
+    serializer_class = SummaryStatSerializer
     # Querying the database for all of the congress people    
     queryset = SummaryStat.objects.all()
