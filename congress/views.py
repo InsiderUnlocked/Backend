@@ -150,6 +150,7 @@ class TickerViewSet(viewsets.ModelViewSet):
         else:
             # Use the ticker id to filter all transactions which contain that ticker id
             queryset = CongressTrade.objects.filter(ticker=ticker).order_by('-transactionDate')        
+            print(queryset)
 
         return queryset
 
@@ -193,7 +194,21 @@ class CongressPersonViewSet(viewsets.ModelViewSet):
         lastName = congressPerson.split()[-1]
 
         # Get the id of the congress person passed into the URL 
-        name = CongressPerson.objects.filter(firstName__icontains=firstName, lastName__icontains=lastName)[0]
+        # Django Search-Bar-Like Functionality to match a name to a congress person object from the database
+        # https://docs.djangoproject.com/en/dev/ref/contrib/admin/#django.contrib.admin.ModelAdmin.search_fields
+        congressPerson = CongressPerson.objects.filter(
+            Q(fullName__icontains=name) | 
+            Q(firstName__icontains=name) | 
+            Q(lastName__icontains=name) |
+
+            Q(fullName__icontains=firstName) | 
+            Q(firstName__icontains=firstName) | 
+            Q(lastName__icontains=firstName) |
+
+            Q(fullName__icontains=lastName) | 
+            Q(firstName__icontains=lastName) | 
+            Q(lastName__icontains=lastName)
+        ).first()
 
         # Get all transactions by congress person
         queryset = CongressTrade.objects.filter(name=name)
@@ -224,7 +239,7 @@ class TickerStatsViewSet(viewsets.ModelViewSet):
     # URL parameter passed into url that also exists in the CongressTrade and CongressPerson models 
     lookup_field = 'ticker'
     # Initiliazing our seializer class
-    # serializer_class = TickerSerializer
+    serializer_class = TickerSerializer
     
     # filter by slug in url in django rest framework modelviewset
     def get_queryset(self):
