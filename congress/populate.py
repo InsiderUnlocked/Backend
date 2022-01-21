@@ -142,6 +142,7 @@ def updateDB(data):
 
         print("Done one")
 
+
 def historical():
     # Load historical data  
     data = json.load(open("./congress/scripts/data/transactions.json"))

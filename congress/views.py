@@ -9,30 +9,83 @@ from rest_framework import filters
 from .serializers import CongressPersonSerializer, CongressTradeSerializer, SummaryStatSerializer, TickerSerializer
 from .models import CongressPerson, CongressTrade, Ticker, SummaryStat
 
+from django.core.management import call_command
 from django.db.models import Q
 import datetime
 
 # TODO: Remove this in production
 from .scripts.congressPeople import main as updateCongressPersonMain
-from .populate import historical as populate
+from .populate import historical as historicalPopulate
 from .populate import current as currentPopulate
 
+
+import logging
+
 def updateDB(): 
-    time = datetime.datetime.now()
-    print('hello world:[{}]'.format(time))
+    # Look at at each table, if any table is empty, populate it with historical data
+    print("started update")
+    # Ticker = Ticker.objects.all()
+    congressPersonObjs = CongressPerson.objects.all()
+    congressTradeObjs = CongressTrade.objects.all()
+    # summaryStatObjs = SummaryStat.objects.all()
+
+    if len(congressPersonObjs) == 0 or len(congressTradeObjs) == 0:
+        # Add/Update CongressPerson Table (Get all members)
+        try: 
+            updateCongressPersonMain()
+        except: 
+            logging.error("ERROR: updating CongressPerson table")
+
+        try: 
+            historicalPopulate()
+        except: 
+            logging.error("ERROR: updating Historical CongressTrades table")
+
+        try: 
+            currentPopulate()
+        except: 
+            logging.error("ERROR: updating Current CongressTrades table")
+
+        try: 
+            currentPopulate()
+        except: 
+            logging.error("ERROR: updating Current CongressTrades table")
+
+        try:
+            call_command('loaddata', 'ticker.json', verbosity=3, interactive=False)
+        except:
+            logging.error("ERROR: updating Tickers table")
+        
+        # Create Summary  Stats
+        try:
+            SummaryStats.objects.create(timeframe=30)
+            SummaryStats.objects.create(timeframe=60)
+            SummaryStats.objects.create(timeframe=90)
+            SummaryStats.objects.create(timeframe=120)
+        except:
+            logging.error("ERROR: creating Summary Stats table")
+
+        print("Database Updated")
+    else:
+        # If none of the tables are empty update it with current data
+        try: 
+            currentPopulate()
+        except: 
+            logging.error("ERROR: updating CongressPerson table")
+
+        try:
+            # Get all summaryStats
+            summaryStats = SummaryStat.objects.all()
+
+            # For each summaryStat, update the stats
+            for summaryStat in summaryStats:
+                summaryStat.updateSummaryStats()
+
+        except:
+            logging.error("ERROR: updating Summary Stats table")
+        
+        print("Database Updated")
     
-    # Add/Update CongressPerson Table (Get all members)
-    # try:
-    # updateCongressPersonMain()
-    # except:
-    #     pass
-
-    # populate()
-    # currentPopulate()
-
-    pass
-
-# TODO: Remove ecerything above this comment in production
 
 
 # government/congress-trades endpoint
