@@ -152,8 +152,8 @@ def current():
     # use senators script to get current data  
     # get todays date and format to month/day/year
     today = datetime.datetime.today().strftime('%m-%d-%Y')
-
-    data = getSenatorData(today)
+    
     data = getSenatorData("12/24/2021")
+    data = getSenatorData(today)
 
     updateDB(data)
