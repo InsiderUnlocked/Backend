@@ -1,3 +1,3 @@
 web: gunicorn api.wsgi
-python manage.py makemigrations
-python manage.py migrate
+python manage.py collectstatic --noinput
+manage.py migrate
