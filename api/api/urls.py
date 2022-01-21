@@ -25,4 +25,4 @@ urlpatterns = [
     path('', include('congress.urls')),
     url(r'^admin/', include('admin_honeypot.urls', namespace='admin_honeypot')),
     path('aprivatesocialmeet/', admin.site.urls),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
