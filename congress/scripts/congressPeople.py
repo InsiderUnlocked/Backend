@@ -151,6 +151,7 @@ def getHistoricalMembers():
     #     f.write(response.text)
     getDetails(response)    
 
+# Run both getHistoricalMembers and getCurrentMembers
 def main():
     getCurrentMembers()
     getHistoricalMembers()
