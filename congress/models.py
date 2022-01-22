@@ -128,7 +128,7 @@ class Ticker(models.Model):
 
     # Update congress persons transaction count every time the object is saved 
     def updateStats(self):
-        transactions = CongressTrade.objects.filter(name=self)
+        transactions = CongressTrade.objects.filter(ticker=self)
 
         # update model
         try:

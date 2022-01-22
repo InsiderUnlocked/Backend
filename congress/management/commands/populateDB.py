@@ -48,22 +48,29 @@ class Command(BaseCommand):
 
             for ticker in tickers:
                 try:
+                    print(ticker)
                     ticker.updateStats()
-                    print("done one")
-                except:
-                    print(f"error: {ticker}")
-        
+                except Exception as e:
+                    print(f"error: {e}")
         except Exception as e:
             logging.error(e)
             logging.error("ERROR: updating ticker stats")
 
         # Create Summary  Stats
         try:
-            for timeframe in range(30, 150, 30):
-                obj = SummaryStat.objects.create(timeframe=timeframe)
-                obj.updateStats()
+            # for timeframe in range(30, 150, 30):
+            #     obj = SummaryStat.objects.create(timeframe=timeframe)
+            #     obj.updateStats()
             
-            logging.info("Finished populating summary stats")
+            # logging.info("Finished populating summary stats")
+
+            # Get all summaryStats
+            summaryStats = SummaryStat.objects.all()
+
+            # For each summaryStat, update the stats
+            for summaryStat in summaryStats:
+                summaryStat.updateStats()
+
 
         except Exception as e:
             print(e)
