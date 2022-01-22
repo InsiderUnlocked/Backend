@@ -103,27 +103,25 @@ class CongressPersonViewSet(viewsets.ModelViewSet):
     # Permission needed to access endpoint
     permission_classes = (permissions.AllowAny,)
     # URL parameter passed into url that also exists in the CongressTrade and CongressPerson models 
-    lookup_field = 'name'
+    lookup_field = 'bioguide'
     # Initiliazing our seializer class
     serializer_class = CongressTradeSerializer
         
     # filter by slug in url in django rest framework modelviewset
     def get_queryset(self):
         # Get the name that was passed in the URL
-        name = self.kwargs['name']
+        bioguide = self.kwargs['bioguide']
 
         ticker = self.request.query_params.get('ticker')
         transactionType = self.request.query_params.get('transactionType')
 
 
-        # Parse slug into first and last name
-        firstName = name.split()[0]
-        lastName = name.split()[-1]
-
         # Get the id of the congress person passed into the URL 
         # Django Search-Bar-Like Functionality to match a name to a congress person object from the database
         # https://docs.djangoproject.com/en/dev/ref/contrib/admin/#django.contrib.admin.ModelAdmin.search_fields
-        congressPerson = CongressPerson.objects.filter(fullName__icontains=name).first()
+        congressPerson = CongressPerson.objects.get(bioguide=bioguide)
+        print(congressPerson)
+
         # Get all transactions by congress person
         queryset = CongressTrade.objects.filter(name=congressPerson)
     
@@ -186,21 +184,16 @@ class CongressStatsViewSet(viewsets.ModelViewSet):
 # Permission needed to access endpoint
     permission_classes = (permissions.AllowAny,)
     # URL parameter passed into url that also exists in the CongressTrade and CongressPerson models 
-    lookup_field = 'fullName'
+    lookup_field = 'bioguide'
     # Initiliazing our seializer class
     serializer_class = CongressPersonSerializer
     
     # filter by slug in url in django rest framework modelviewset
     def get_queryset(self):
-        name = self.kwargs['fullName']
-
-        # Parse slug into first and last name
-        firstName = name.split()[0]
-        lastName = name.split()[-1]
+        bioguide = self.kwargs['bioguide']
 
         # Get the id of the congress person passed into the URL 
-        queryset = CongressPerson.objects.filter(fullName__icontains=firstName, lastName__icontains=lastName)
-        print(queryset)
+        queryset = CongressPerson.objects.filter(bioguide=bioguide)
 
         return queryset 
 
