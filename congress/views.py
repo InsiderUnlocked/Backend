@@ -98,14 +98,14 @@ class TickerViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # Query Database for the ticker id  
         ticker = Ticker.objects.get(ticker=self.kwargs['ticker'])
-        keywords = self.request.query_params.get('  ')
+        search = self.request.query_params.get('search')
         transactionType = self.request.query_params.get('transactionType')
 
-        if keywords is not None or transactionType is not None:
-            if keywords is None:
+        if search is not None or transactionType is not None:
+            if search is None:
                 queryset = CongressTrade.objects.filter(ticker=ticker, transactionType=transactionType).order_by('-transactionDate')        
             else:
-                queryset = CongressTrade.objects.filter(ticker=ticker, name__fullName__contains=keywords).order_by('-transactionDate')        
+                queryset = CongressTrade.objects.filter(ticker=ticker, name__fullName__contains=search).order_by('-transactionDate')        
             print(queryset)
         else:
             # Use the ticker id to filter all transactions which contain that ticker id
