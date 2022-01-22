@@ -1,6 +1,7 @@
+# @Author: Farhan Rehman
 # Purpose: Converts SQLite data to JSON
 
-# Import Libraries
+# Imports
 from rest_framework.serializers import ModelSerializer, ReadOnlyField
 from .models import CongressTrade, CongressPerson, Ticker, SummaryStat
 from rest_framework import serializers

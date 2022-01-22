@@ -142,12 +142,10 @@ def updateDB(data):
             congressPerson.updateStats()
             ticker.updateStats()
 
-            print("done one")
-
         except Exception as e:
             # There is an overlap in dates, so a UNIQUE constraint error will be thrown, but should be ignored
+            logging.error("Error while creating a congress trade object")
             logging.error(e)
-            print("ERROR: " + str(name))
             continue
 
 def historical():
