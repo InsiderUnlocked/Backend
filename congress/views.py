@@ -123,23 +123,9 @@ class CongressPersonViewSet(viewsets.ModelViewSet):
         # Get the id of the congress person passed into the URL 
         # Django Search-Bar-Like Functionality to match a name to a congress person object from the database
         # https://docs.djangoproject.com/en/dev/ref/contrib/admin/#django.contrib.admin.ModelAdmin.search_fields
-        congressPerson = CongressPerson.objects.filter(fullName__icontains=name)
-
-        if not congressPerson:
-            congressPerson = CongressPerson.objects.filter(
-                Q(fullName__icontains=name) | 
-                Q(firstName__icontains=firstName) | 
-                Q(lastName__icontains=lastName) | 
-
-                Q(fullName__icontains=name.split()) | 
-                Q(firstName__icontains=name.split()) | 
-                Q(lastName__icontains=name.split()) 
-            )
-
-        print(congressPerson)
-
+        congressPerson = CongressPerson.objects.filter(fullName__icontains=name).first()
         # Get all transactions by congress person
-        queryset = CongressTrade.objects.filter(name=congressPerson.first())
+        queryset = CongressTrade.objects.filter(name=congressPerson)
     
         if ticker is not None:
             if len(ticker) > 0:
@@ -149,7 +135,6 @@ class CongressPersonViewSet(viewsets.ModelViewSet):
         if transactionType is not None:
             if len(transactionType) > 0:
                 queryset = queryset.filter(transactionType=transactionType)
-
 
         return queryset
 
@@ -214,21 +199,7 @@ class CongressStatsViewSet(viewsets.ModelViewSet):
         lastName = name.split()[-1]
 
         # Get the id of the congress person passed into the URL 
-        # Django Search-Bar-Like Functionality to match a name to a congress person object from the database
-        # https://docs.djangoproject.com/en/dev/ref/contrib/admin/#django.contrib.admin.ModelAdmin.search_fields
-        queryset = CongressPerson.objects.filter(fullName__icontains=name)
-
-        if not queryset:
-            queryset = CongressPerson.objects.filter(
-                Q(fullName__icontains=name) | 
-                Q(firstName__icontains=firstName) | 
-                Q(lastName__icontains=lastName) | 
-
-                Q(fullName__icontains=name.split()) | 
-                Q(firstName__icontains=name.split()) | 
-                Q(lastName__icontains=name.split()) 
-            )
-
+        queryset = CongressPerson.objects.filter(fullName__icontains=firstName, lastName__icontains=lastName)
         print(queryset)
 
         return queryset 
