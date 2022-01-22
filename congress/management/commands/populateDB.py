@@ -30,18 +30,29 @@ class Command(BaseCommand):
         #     logging.error("ERROR: updating Tickers table")
         #     logging.error(e)
 
-        try: 
-            historicalPopulate()
-            logging.info("Finished populating historical congress trades")
-        except: 
-            logging.error("ERROR: updating Historical CongressTrades table")
+        # try: 
+        #     historicalPopulate()
+        #     logging.info("Finished populating historical congress trades")
+        # except: 
+        #     logging.error("ERROR: updating Historical CongressTrades table")
 
-        try: 
-            currentPopulate()
-            logging.info("Finished populating recent congress trades")
-        except: 
-            logging.error("ERROR: updating Current CongressTrades table")
+        # try: 
+        #     currentPopulate()
+        #     logging.info("Finished populating recent congress trades")
+        # except: 
+        #     logging.error("ERROR: updating Current CongressTrades table")
         
+        # update ticker stats
+        try:
+            tickers = Ticker.objects.all()
+
+            for ticker in tickers:
+                ticker.updateStats()
+        
+        except Exception as e:
+            logging.error(e)
+            logging.error("ERROR: updating ticker stats")
+
         # Create Summary  Stats
         try:
             for timeframe in range(30, 150, 30):
