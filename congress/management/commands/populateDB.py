@@ -47,8 +47,11 @@ class Command(BaseCommand):
             tickers = Ticker.objects.all()
 
             for ticker in tickers:
-                ticker.updateStats()
-                print("done one")
+                try:
+                    ticker.updateStats()
+                    print("done one")
+                except:
+                    print(f"error: {ticker}")
         
         except Exception as e:
             logging.error(e)
