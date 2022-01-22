@@ -50,7 +50,7 @@ $ python manage.py makemigrations
 $ python manage.py migrate
 ```
 
-Populate Database (>2 hours to run)
+Populate Database (>6 hours to run)
 ```console
 $ python manage.py populateDB
 ```
