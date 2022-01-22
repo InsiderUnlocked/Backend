@@ -28,8 +28,7 @@ router.register(r'summary-stats', views.SummaryStatsViewSet, basename='summarySt
 router.register(r'ticker-stats', views.TickerStatsViewSet, basename='tickerStats')
 
 # Returns the summary stats for Ticker endpoint 
-router.register(r'congress-stats', views.CongressStatsViewSet, basename='congressStats')
-
+router.register(r'congress-stats', views.CongressStatsViewSet, basename='congressStats')  
 
 # Wire up our API using automatic URL routing.
 urlpatterns = [
