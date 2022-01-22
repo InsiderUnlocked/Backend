@@ -19,7 +19,7 @@ class CongressPersonSerializer(serializers.ModelSerializer):
         # Database table
         model = CongressPerson
         # Fields to appear on the response
-        fields = ('fullName', 'currentParty', 'currentChamber',  'currentState', 'image', 'totalTransactions', 'totalVolumeTransactions', 'purchases', 'sales',)
+        fields = ('fullName', 'currentParty', 'bioguide', 'currentChamber',  'currentState', 'image', 'totalTransactions', 'totalVolumeTransactions', 'purchases', 'sales',)
 
 class CongressTradeSerializer(serializers.ModelSerializer):
     # Gets ForignKey field to appear on the response, refer to ERD Diagram to get a better understanding of the connection between the models
