@@ -104,10 +104,11 @@ class TickerViewSet(viewsets.ModelViewSet):
                 # Use the ticker id to filter all transactions which contain that ticker id
         queryset = CongressTrade.objects.filter(ticker=ticker).order_by('-transactionDate')        
 
-        if name is None:
-            queryset = CongressTrade.objects.filter(ticker=ticker, transactionType=transactionType).order_by('-transactionDate')        
-        else:
-            queryset = CongressTrade.objects.filter(ticker=ticker, name__fullName__contains=name).order_by('-transactionDate')        
+        if name is not None:
+            queryset = queryset.filter(ticker=ticker, transactionType=transactionType).order_by('-transactionDate')        
+        
+        if transactionType is not None:
+            queryset = queryset.filter(ticker=ticker, name__fullName__contains=name).order_by('-transactionDate')        
 
         return queryset
 

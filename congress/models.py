@@ -48,17 +48,10 @@ class CongressPerson(models.Model):
 
     # Update congress persons transaction count every time the object is saved 
     def updateStats(self):
-        # transactions = CongressTrade.objects.filter(name=self, transactionDate__lte=datetime.datetime.today(), transactionDate__gt=datetime.datetime.today()-datetime.timedelta(days=90))
         transactions = CongressTrade.objects.filter(name=self)
-
-
+        
         # Get the number of transactions by congress person
         total = transactions.count()
-
-        # # Trade Type Ratio
-        # self.purchases = transactions.filter(transactionType='Purchase').count()
-        # self.sales = transactions.filter(transactionType__startswith='Sale').count()
-
 
         # Total Volume
         listOfAmounts = {
