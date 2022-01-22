@@ -17,60 +17,39 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         logging.info("Populating database...")
         # Add/Update CongressPerson Table (Get all members)
-        # try: 
-        #     updateCongressPersonMain()
-        #     logging.info("Finished populating congress people table")
-        # except: 
-        #     logging.error("ERROR: updating CongressPerson table")
+        try: 
+            updateCongressPersonMain()
+            logging.info("Finished populating congress people table")
+        except: 
+            logging.error("ERROR: updating CongressPerson table")
 
-        # try:
-        #     call_command('loaddata', 'ticker.json')
-        #     logging.info("Finished populating tickers table")
-        # except Exception as e:
-        #     logging.error("ERROR: updating Tickers table")
-        #     logging.error(e)
-
-        # try: 
-        #     historicalPopulate()
-        #     logging.info("Finished populating historical congress trades")
-        # except: 
-        #     logging.error("ERROR: updating Historical CongressTrades table")
-
-        # try: 
-        #     currentPopulate()
-        #     logging.info("Finished populating recent congress trades")
-        # except: 
-        #     logging.error("ERROR: updating Current CongressTrades table")
-        
-        # update ticker stats
         try:
-            tickers = Ticker.objects.all()
-
-            for ticker in tickers:
-                try:
-                    print(ticker)
-                    ticker.updateStats()
-                except Exception as e:
-                    print(f"error: {e}")
+            call_command('loaddata', 'ticker.json')
+            logging.info("Finished populating tickers table")
         except Exception as e:
+            logging.error("ERROR: updating Tickers table")
             logging.error(e)
-            logging.error("ERROR: updating ticker stats")
+
+        try: 
+            historicalPopulate()
+            logging.info("Finished populating historical congress trades")
+        except: 
+            logging.error("ERROR: updating Historical CongressTrades table")
+
+        try: 
+            currentPopulate()
+            logging.info("Finished populating recent congress trades")
+        except: 
+            logging.error("ERROR: updating Current CongressTrades table")
+        
 
         # Create Summary  Stats
         try:
-            # for timeframe in range(30, 150, 30):
-            #     obj = SummaryStat.objects.create(timeframe=timeframe)
-            #     obj.updateStats()
+            for timeframe in range(30, 150, 30):
+                obj = SummaryStat.objects.create(timeframe=timeframe)
+                obj.updateStats()
             
-            # logging.info("Finished populating summary stats")
-
-            # Get all summaryStats
-            summaryStats = SummaryStat.objects.all()
-
-            # For each summaryStat, update the stats
-            for summaryStat in summaryStats:
-                summaryStat.updateStats()
-
+            logging.info("Finished populating summary stats")
 
         except Exception as e:
             print(e)
