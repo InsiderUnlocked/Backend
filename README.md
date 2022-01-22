@@ -17,7 +17,7 @@ Insider Unlocked is an ongoing web application we have been co-developing for th
       Product Management
     </a>
     <span> | </span>
-        <a href="https://github.com/InsiderUnlocked/Backend#readme">
+        <a href="https://github.com/InsiderUnlocked/Backend#Documentation">
       API
     </a>
   </h3>
