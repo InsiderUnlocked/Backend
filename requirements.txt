@@ -25,3 +25,4 @@ django-heroku==0.3.1
 qrcode==6.1
 tzlocal==2.1
 drf-yasg==1.20.0
+django-environ==0.8.1
