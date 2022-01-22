@@ -96,19 +96,24 @@ class TickerViewSet(viewsets.ModelViewSet):
 
     # filter by slug in url in django rest framework modelviewset
     def get_queryset(self):
+        # replace dashes in ticker with periods
+        tickerStr = self.kwargs['ticker'].replace('-', '.')
+
         # Query Database for the ticker id  
-        ticker = Ticker.objects.get(ticker=self.kwargs['ticker'])
-               
+        ticker = Ticker.objects.get(ticker=tickerStr)
+            
         transactionType = self.request.query_params.get('transactionType')
-        keywords = self.request.query_params.get('name')
+        name = self.request.query_params.get('name')
         
         queryset = CongressTrade.objects.filter(ticker=ticker) 
         
-        if len(keywords) > 0:
-            queryset = queryset.filter(name__fullName__icontains=keywords)        
+        if name is not None:
+            if len(name) > 0:
+                queryset = queryset.filter(name__fullName__icontains=name)        
 
-        if len(transactionType) > 0:
-            queryset = queryset.filter(transactionType=transactionType)    
+        if transactionType is not None:
+            if len(transactionType) > 0:
+                queryset = queryset.filter(transactionType=transactionType)    
 
         return queryset.order_by('-transactionDate')
 
@@ -152,8 +157,9 @@ class CongressPersonViewSet(viewsets.ModelViewSet):
         # Get all transactions by congress person
         queryset = CongressTrade.objects.filter(name=congressPerson)
     
-        if len(ticker) > 0:
-            queryset = queryset.filter(ticker__ticker__icontains=ticker)
+        if ticker is not None:
+            if len(ticker) > 0:
+                queryset = queryset.filter(ticker__ticker__icontains=ticker)
 
         return queryset
 
