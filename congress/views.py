@@ -149,17 +149,11 @@ class CongressPersonViewSet(viewsets.ModelViewSet):
         # Django Search-Bar-Like Functionality to match a name to a congress person object from the database
         # https://docs.djangoproject.com/en/dev/ref/contrib/admin/#django.contrib.admin.ModelAdmin.search_fields
         congressPerson = CongressPerson.objects.filter(fullName__icontains=name).first()
-
-        print(congressPerson)
-
         # Get all transactions by congress person
         queryset = CongressTrade.objects.filter(name=congressPerson)
     
-        if ticker is not None:
+        if len(ticker) > 0:
             queryset = queryset.filter(ticker__ticker__icontains=ticker)
-            print(queryset)
-        
-        print(queryset)
 
         return queryset
 
