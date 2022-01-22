@@ -48,6 +48,7 @@ class Command(BaseCommand):
 
             for ticker in tickers:
                 ticker.updateStats()
+                print("done one")
         
         except Exception as e:
             logging.error(e)
