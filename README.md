@@ -50,7 +50,7 @@ $ python manage.py makemigrations
 $ python manage.py migrate
 ```
 
-Populate Database (>6 hours to run)
+Populate Database
 ```console
 $ python manage.py populateDB
 ```
@@ -62,6 +62,6 @@ $ python manage.py runserver
 
 # Documentation
 
-
+View the [Documentation](https://insiderunlocked.herokuapp.com/docs/)
 # License
 [MIT](https://tldrlegal.com/license/mit-license)
