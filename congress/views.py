@@ -250,7 +250,29 @@ class CongressStatsViewSet(viewsets.ModelViewSet):
 class SummaryStatsViewSet(viewsets.ModelViewSet):
     # Permission needed to access endpoint
     permission_classes = (permissions.AllowAny,)
+    # URL parameter passed into url that also exists in the CongressTrade and CongressPerson models 
+    lookup_field = 'timeframe'
     # Initiliazing our seializer class
     serializer_class = SummaryStatSerializer
-    # Querying the database for all of the congress people    
-    queryset = SummaryStat.objects.all()
+    
+    # filter by slug in url in django rest framework modelviewset
+    def get_queryset(self):
+        timeframe = self.kwargs['timeframe']
+
+        queryset = SummaryStat.objects.filter(timeframe=timeframe)
+
+        return queryset
+
+
+    # Serialize and Paginate the data    
+    def retrieve(self, request, *args, **kwargs):
+        # Get the queried data
+        result = self.get_queryset()
+
+        # Paginate the data
+        result_page = self.paginate_queryset(result)
+        
+        # Serialize the data - (convert to JSON)
+        serializer = SummaryStatSerializer(result_page, many=True)
+
+        return self.get_paginated_response(serializer.data)
