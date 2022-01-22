@@ -17,18 +17,18 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         logging.info("Populating database...")
         # Add/Update CongressPerson Table (Get all members)
-        try: 
-            updateCongressPersonMain()
-            logging.info("Finished populating congress people table")
-        except: 
-            logging.error("ERROR: updating CongressPerson table")
+        # try: 
+        #     updateCongressPersonMain()
+        #     logging.info("Finished populating congress people table")
+        # except: 
+        #     logging.error("ERROR: updating CongressPerson table")
 
-        try:
-            call_command('loaddata', 'ticker.json')
-            logging.info("Finished populating tickers table")
-        except Exception as e:
-            logging.error("ERROR: updating Tickers table")
-            logging.error(e)
+        # try:
+        #     call_command('loaddata', 'ticker.json')
+        #     logging.info("Finished populating tickers table")
+        # except Exception as e:
+        #     logging.error("ERROR: updating Tickers table")
+        #     logging.error(e)
 
         try: 
             historicalPopulate()

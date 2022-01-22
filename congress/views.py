@@ -13,40 +13,7 @@ from django.core.management import call_command
 from django.db.models import Q
 import datetime
 
-# TODO: Remove this in production
-from .scripts.congressPeople import main as updateCongressPersonMain
-from .populate import historical as historicalPopulate
-from .populate import current as currentPopulate
-
-
 import logging
-
-def updateDB(): 
-    # Look at at each table, if any table is empty, populate it with historical data
-    logging.info("started update")
-
-    # If none of the tables are empty update it with current data
-    try: 
-        currentPopulate()
-        logging.info("Finished populating recent congress trades")
-
-    except: 
-        logging.error("ERROR: updating CongressPerson table")
-
-    try:
-        # Get all summaryStats
-        summaryStats = SummaryStat.objects.all()
-
-        # For each summaryStat, update the stats
-        for summaryStat in summaryStats:
-            summaryStat.updateStats()
-
-    except:
-        logging.error("ERROR: updating Summary Stats table")
-    
-    logging.info("Database Updated")
-    
-
 
 # government/congress-trades endpoint
 # Returns all of the Congress Transactions
