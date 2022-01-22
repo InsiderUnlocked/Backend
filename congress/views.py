@@ -100,18 +100,18 @@ class TickerViewSet(viewsets.ModelViewSet):
         ticker = Ticker.objects.get(ticker=self.kwargs['ticker'])
         name = self.request.query_params.get('name')
         transactionType = self.request.query_params.get('transactionType')
-        
-                # Use the ticker id to filter all transactions which contain that ticker id
-        queryset = CongressTrade.objects.filter(ticker=ticker).order_by('-transactionDate')        
 
-        if name is not None:
-            queryset = queryset.filter(ticker=ticker, transactionType=transactionType).order_by('-transactionDate')        
-        
-        if transactionType is not None:
-            queryset = queryset.filter(ticker=ticker, name__fullName__contains=name).order_by('-transactionDate')        
+        if name is not None or transactionType is not None:
+            if name is None:
+                queryset = CongressTrade.objects.filter(ticker=ticker, transactionType=transactionType).order_by('-transactionDate')        
+            else:
+                queryset = CongressTrade.objects.filter(ticker=ticker, name__fullName__contains=name).order_by('-transactionDate')        
+            print(queryset)
+        else:
+            # Use the ticker id to filter all transactions which contain that ticker id
+            queryset = CongressTrade.objects.filter(ticker=ticker).order_by('-transactionDate')        
 
         return queryset
-
     # Serialize and Paginate the data    
     def retrieve(self, request, *args, **kwargs):
         # Get the queried data

@@ -5,6 +5,37 @@ from django.db import models
 from jsonfield import JSONField
 import datetime
 
+def getSumMid(transactions):
+    # Get the number of transactions by congress person
+    total = transactions.count()
+
+    # Total Volume
+    listOfAmounts = {
+        "$1,001 - $15,000": (1001, 15000),
+        "$15,001 - $50,000": (15001, 50000),
+        "$50,001 - $100,000": (50001, 100000),
+        "$100,001 - $250,000": (100001, 250000),
+        "$250,001 - $500,000": (250001, 500000),
+        "$500,001 - $1,000,000": (500001, 1000000),
+        "$1,000,001 - $5,000,000": (1000001, 5000000),
+        "$5,000,001 - $25,000,000": (5000001, 25000000),
+        "$25,000,001 - $50,000,000": (25000001, 50000000),
+        "Over $50,000,000": (50000000, 50000000),
+    }
+    
+
+    sumMin = 0
+    sumMax = 0 
+
+    # iterate through the amount of each transaction 
+    # O(N) iteration on this loop through use of hashmap (Improved from previous O(N^2) iteration)))
+    for i in range(total):
+        # get the amount of the transaction using hashmap
+        sumMin += listOfAmounts[str(transactions[i].amount)][0]
+        sumMax += listOfAmounts[str(transactions[i].amount)][1]
+    
+    sumMid = (sumMax + sumMin) / 2
+
 # Names of Congress
 class CongressPerson(models.Model):
     # bioguide
@@ -49,43 +80,13 @@ class CongressPerson(models.Model):
     # Update congress persons transaction count every time the object is saved 
     def updateStats(self):
         transactions = CongressTrade.objects.filter(name=self)
-        
-        # Get the number of transactions by congress person
-        total = transactions.count()
-
-        # Total Volume
-        listOfAmounts = {
-            "$1,001 - $15,000": (1001, 15000),
-            "$15,001 - $50,000": (15001, 50000),
-            "$50,001 - $100,000": (50001, 100000),
-            "$100,001 - $250,000": (100001, 250000),
-            "$250,001 - $500,000": (250001, 500000),
-            "$500,001 - $1,000,000": (500001, 1000000),
-            "$1,000,001 - $5,000,000": (1000001, 5000000),
-            "$5,000,001 - $25,000,000": (5000001, 25000000),
-            "$25,000,001 - $50,000,000": (25000001, 50000000),
-            "Over $50,000,000": (50000000, 50000000),
-        }
-        
-
-        sumMin = 0
-        sumMax = 0 
-
-        # iterate through the amount of each transaction 
-        # O(N) iteration on this loop through use of hashmap (Improved from previous O(N^2) iteration)))
-        for i in range(total):
-            # get the amount of the transaction using hashmap
-            sumMin += listOfAmounts[str(transactions[i].amount)][0]
-            sumMax += listOfAmounts[str(transactions[i].amount)][1]
-        
-        sumMid = (sumMax + sumMin) / 2
 
         # update model
         CongressPerson.objects.filter(bioguide=self.bioguide).update(
             totalTransactions=transactions.count(), 
             purchases=transactions.filter(transactionType='Purchase').count(), 
             sales=transactions.filter(transactionType__startswith='Sale').count(),
-            totalVolumeTransactions=sumMid, 
+            totalVolumeTransactions=getSumMid(transactions), 
         )
         
 # Signals to update total transactions for each congress member
@@ -125,38 +126,7 @@ class Ticker(models.Model):
 
     # Update congress persons transaction count every time the object is saved 
     def updateStats(self):
-        # transactions = CongressTrade.objects.filter(ticker=self, transactionDate__lte=datetime.datetime.today(), transactionDate__gt=datetime.datetime.today()-datetime.timedelta(days=90))
-        transactions = CongressTrade.objects.filter(ticker=self)
-
-        # Get the number of transactions by congress person
-        total = transactions.count()
-
-        # Total Volume
-        listOfAmounts = {
-            "$1,001 - $15,000": (1001, 15000),
-            "$15,001 - $50,000": (15001, 50000),
-            "$50,001 - $100,000": (50001, 100000),
-            "$100,001 - $250,000": (100001, 250000),
-            "$250,001 - $500,000": (250001, 500000),
-            "$500,001 - $1,000,000": (500001, 1000000),
-            "$1,000,001 - $5,000,000": (1000001, 5000000),
-            "$5,000,001 - $25,000,000": (5000001, 25000000),
-            "$25,000,001 - $50,000,000": (25000001, 50000000),
-            "Over $50,000,000": (50000000, 50000000),
-        }
-        
-
-        sumMin = 0
-        sumMax = 0 
-
-        # iterate through the amount of each transaction 
-        # O(N) iteration on this loop through use of hashmap (Improved from previous O(N^2) iteration)))
-        for i in range(total):
-            # get the amount of the transaction using hashmap
-            sumMin += listOfAmounts[str(transactions[i].amount)][0]
-            sumMax += listOfAmounts[str(transactions[i].amount)][1]
-        
-        sumMid = (sumMax + sumMin) / 2
+        transactions = CongressTrade.objects.filter(name=self)
 
         # update model
         try:
@@ -164,7 +134,7 @@ class Ticker(models.Model):
                 totalTransactions=transactions.count(), 
                 purchases=transactions.filter(transactionType='Purchase').count(), 
                 sales=transactions.filter(transactionType__startswith='Sale').count(),
-                totalVolumeTransactions=sumMid, 
+                totalVolumeTransactions=getSumMid(transactions), 
             )
         except Exception as e:
             print("ERROR: ", str(e))
@@ -243,47 +213,12 @@ class SummaryStat(models.Model):
     def updateStats(self):
         transactions = CongressTrade.objects.filter(transactionDate__lte=datetime.datetime.today(), transactionDate__gt=datetime.datetime.today()-datetime.timedelta(days=self.timeframe))
 
-        # Get the number of transactions by congress person
-        total = transactions.count()
-
-        # # Trade Type Ratio
-        # self.purchases = transactions.filter(transactionType='Purchase').count()
-        # self.sales = transactions.filter(transactionType__startswith='Sale').count()
-
-
-        # Total Volume
-        listOfAmounts = {
-            "$1,001 - $15,000": (1001, 15000),
-            "$15,001 - $50,000": (15001, 50000),
-            "$50,001 - $100,000": (50001, 100000),
-            "$100,001 - $250,000": (100001, 250000),
-            "$250,001 - $500,000": (250001, 500000),
-            "$500,001 - $1,000,000": (500001, 1000000),
-            "$1,000,001 - $5,000,000": (1000001, 5000000),
-            "$5,000,001 - $25,000,000": (5000001, 25000000),
-            "$25,000,001 - $50,000,000": (25000001, 50000000),
-            "Over $50,000,000": (50000000, 50000000),
-        }
-        
-
-        sumMin = 0
-        sumMax = 0 
-
-        # iterate through the amount of each transaction 
-        # O(N) iteration on this loop through use of hashmap (Improved from previous O(N^2) iteration)))
-        for i in range(total):
-            # get the amount of the transaction using hashmap
-            sumMin += listOfAmounts[str(transactions[i].amount)][0]
-            sumMax += listOfAmounts[str(transactions[i].amount)][1]
-        
-        sumMid = (sumMax + sumMin) / 2
-
         # update model
         SummaryStat.objects.filter(id=self.id).update(
             total=transactions.count(), 
             purchases=transactions.filter(transactionType='Purchase').count(), 
             sales=transactions.filter(transactionType__startswith='Sale').count(),
-            totalVolume=sumMid, 
+            totalVolume=sumMid(transactions), 
         )
 
 # Signals to update total transactions for each congress member
