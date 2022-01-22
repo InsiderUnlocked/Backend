@@ -1,15 +1,24 @@
+# @Author Farhan Rehman
 # Purpose: Initilze the table models for all our endpoints
+
+# Imports 
 from django.db.models import signals
 from .signals import tradesCount, summaryStatUpdate, tickerStatUpdate, congressPersonStatUpdate
 from django.db import models
 from jsonfield import JSONField
 import datetime
 
+# Calculate the average colume of trades
+# The transactions parameter accepts a queryset object of congress trade transactions 
 def getSumMid(transactions):
-    # Get the number of transactions by congress person
+    # Initialize the min and max sum values. These will keep track of our highest and lowest volumes possible. With this we can get the average volume.
+    sumMin = 0
+    sumMax = 0
+
+    # Count the number of transactions
     total = transactions.count()
 
-    # Total Volume
+    # Hashmap of fixed price ranges matched their integer representations
     listOfAmounts = {
         "$1,001 - $15,000": (1001, 15000),
         "$15,001 - $50,000": (15001, 50000),
@@ -22,25 +31,26 @@ def getSumMid(transactions):
         "$25,000,001 - $50,000,000": (25000001, 50000000),
         "Over $50,000,000": (50000000, 50000000),
     }
-    
-
-    sumMin = 0
-    sumMax = 0
 
     # iterate through the amount of each transaction 
-    # O(N) iteration on this loop through use of hashmap (Improved from previous O(N^2) iteration)))
+    # O(N) iteration on this loop through use of hashmap (Improved from previous O(N^2) iteration which used a nested for loop and array to search for the values)
     for i in range(total):
-        # get the amount of the transaction using hashmap
+        # get the amount of the transaction using hashmap, and add the min value to sumMin and the max value to sumMax
         sumMin += listOfAmounts[str(transactions[i].amount)][0]
         sumMax += listOfAmounts[str(transactions[i].amount)][1]
     
+    # Calculate the average traded volume using the max and min amount traded
     sumMid = (sumMax + sumMin) / 2
 
+    # Return the average traded volume as a float
     return sumMid
 
 # Names of Congress
 class CongressPerson(models.Model):
     # bioguide
+    # A CharField is a character field
+    # max_length is the maximum number of characters
+    # unique is a boolean value that determines if the field is unique
     bioguide = models.CharField(max_length=100, unique=True)
     # first name
     firstName = models.CharField(max_length=1000)
@@ -64,9 +74,14 @@ class CongressPerson(models.Model):
     image = models.CharField(max_length=10000)
     
     # terms
+    # JSONField is a field that can store a JSON object
+    # default is the default value of the field, which we set to as None
+    # blank is a boolean value which indicates if a field can be blank ("")
+    # null is a boolean value which indicates if a field can be null (None)
     termsServed = models.JSONField(default=None, blank=True, null=True)
     
     # total transactions
+    # Big Integer Field is a field that can store a large integer value (the regular integerfields can only hold )
     totalTransactions = models.BigIntegerField(default=0)
 
     # Total Volume of transactions

@@ -52,9 +52,12 @@ class Command(BaseCommand):
             logging.error("Updating Current CongressTrades table")
         
 
-        # Create Summary  Stats
+        # Create the Summary Stats and update them to populate them with recent data
         try:
-            for timeframe in range(30, 150, 30):
+            # We only want to show summarized data from the following timeframes
+            timeframes = [30, 60, 90, 120] 
+            # Loop through the timeframes and update the summary stats
+            for timeframe in timeframes:
                 obj = SummaryStat.objects.create(timeframe=timeframe)
                 obj.updateStats()
             

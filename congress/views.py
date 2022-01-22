@@ -112,8 +112,8 @@ class CongressPersonViewSet(viewsets.ModelViewSet):
         # Get the name that was passed in the URL
         bioguide = self.kwargs['bioguide']
 
-        ticker = self.request.query_params.get('ticker')
         transactionType = self.request.query_params.get('transactionType')
+        ticker = self.request.query_params.get('ticker')
 
 
         # Get the id of the congress person passed into the URL 
@@ -127,7 +127,7 @@ class CongressPersonViewSet(viewsets.ModelViewSet):
     
         if ticker is not None:
             if len(ticker) > 0:
-                tickerStr = self.kwargs['ticker'].replace('-', '.')
+                ticker = ticker.replace('-', '.')
                 queryset = queryset.filter(ticker__ticker__icontains=ticker)
 
         if transactionType is not None:

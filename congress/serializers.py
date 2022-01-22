@@ -34,7 +34,7 @@ class CongressTradeSerializer(serializers.ModelSerializer):
         # Database table
         model = CongressTrade
         # Fields to appear on the response
-        fields = ('name', 'firstName', 'bioguide','lastName', 'ticker', 'transactionDate', 'assetType', 'transactionType', 'amount',  'ptrLink')
+        fields = ('name', 'bioguide','firstName','lastName', 'ticker', 'transactionDate', 'assetType', 'transactionType', 'amount',  'ptrLink')
 
 class SummaryStatSerializer(serializers.ModelSerializer):
     class Meta:
