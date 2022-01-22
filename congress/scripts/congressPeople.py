@@ -1,3 +1,4 @@
+# @Author: Mohammed-Al Rasheed
 # Purpose: This script is used to download the current and historical members of the US Congress
 
 # Import Libraries
@@ -85,7 +86,7 @@ def getDetails(response):
         # Iterate through all terms and see if any terms end dates are 2008 or later
         for j in range(len(objs[i]['terms'])):
             # a Senators term length is 6 years. So we want to see if their end year greater than 2006, since data only started getting recorded from 2012 and onwards
-            if int(objs[i]['terms'][j]["end"][:4]) < 2000:
+            if int(objs[i]['terms'][j]["end"][:4]) < 2006:
                 # skip iteration
                 continue
 
@@ -95,7 +96,7 @@ def getDetails(response):
             # get the image
             imageURL = f"https://theunitedstates.io/images/congress/225x275/{bioguide}.jpg"
             
-            #make request to image url
+            # make request to image url
             imageResponse = requests.get(imageURL)
             
             # if image is not found, set image to default
@@ -125,13 +126,15 @@ def getDetails(response):
             
             termsServed = objs[i]["terms"]
 
+            # append the data to an array
             data.append(CongressPerson(bioguide=bioguide, firstName=firstName, lastName=lastName, fullName=fullName, currentState=state, currentParty=party, currentChamber=chamber, image=imageURL, termsServed=termsServed))
-            print("done one")
+            
         except Exception as e:
-            # There are two states that dont appear to be an acctual state. When we searched it up we couldnt find anything. This execption is to handle that error for historical congress memebers.
+            logging.error(e)
             continue
     
     # bulk add data
+    # this is much quicker that using .create(), but doesn't run post_save functionlaity which is why we dont use it often in our codebase
     CongressPerson.objects.bulk_create(data, ignore_conflicts=True)
 
 def getCurrentMembers():

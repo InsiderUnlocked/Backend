@@ -1,7 +1,7 @@
+# @Author: Mohammed-Al Rasheed
 # Purpose: This file contains a function which cleans texts. By this we mean remove unneccasery characters and remove new lines, tabs, and whitespaces.
 
 # Import Libraries
-import string
 import re
 
 # Cleans the text by removing all unneccasery characters

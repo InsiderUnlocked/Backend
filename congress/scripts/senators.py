@@ -1,3 +1,4 @@
+# @Author: Farhan  Rehman, Mohammed-Al Rasheed
 # Purpose: This file will scrape data from the Senate website and return the data asJSON 
 
 # Import Libraries
@@ -36,6 +37,7 @@ Collect validated CSRF token through the cookies of the website.
 
 Once we validate the CSRF token we store in a variable so that we can have a validated CSRF token to implement future requests.
 '''
+# @Author: Mohammed-Al Rasheed
 def bypassTOS():    
     try:
         # Get unvalidated CSRF token from cookies
@@ -66,6 +68,7 @@ Send a request to the resulting table
 Going through all the pages of the table, the table is paginated iteratively
 # If there are is more than one page in the table we have to detect that and iterate through all the pages(POSSIBLY recursively)
 '''
+# @Author: Farhan Rehman
 def getReports(csrfToken, start, reportType, startDate, lastName):    
     try:
         payload = {
@@ -121,6 +124,7 @@ Scrape all the data from the from each row iteratively as well
 ## Than we iterate through the table and store each row in our local database
 '''
 
+# @Author: Farhan Rehman
 # PARSE PERIODIC TRANSAACTION REPORT HTML PAGE
 def parseHTML(csrfToken, link, name, notificationDate):
     try:
@@ -205,7 +209,7 @@ def parseHTML(csrfToken, link, name, notificationDate):
         print(link)
         raise e
 
-
+# @Author: Mohammed-Al Rasheed
 def main(startDate):
     # Get validated CSRF token
     CSRF = bypassTOS()
