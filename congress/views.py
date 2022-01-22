@@ -126,16 +126,12 @@ class CongressPersonViewSet(viewsets.ModelViewSet):
         # congressPerson = CongressPerson.objects.filter(fullName__icontains=name).first()
         congressPerson = CongressPerson.objects.filter(
             Q(fullName__icontains=name) | 
-            Q(firstName__icontains=name) | 
-            Q(lastName__icontains=name) |
-
-            Q(fullName__icontains=firstName) | 
             Q(firstName__icontains=firstName) | 
-            Q(lastName__icontains=firstName) |
+            Q(lastName__icontains=lastName) | 
 
-            Q(fullName__icontains=lastName) | 
-            Q(firstName__icontains=lastName) | 
-            Q(lastName__icontains=lastName)
+            Q(fullName__icontains=name.split()) | 
+            Q(firstName__icontains=name.split()) | 
+            Q(lastName__icontains=name.split()) 
         ).first()
 
         # Get all transactions by congress person

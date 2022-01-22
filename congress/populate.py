@@ -138,6 +138,9 @@ def updateDB(data):
             )
             # update congress person object
             congressPerson.updateStats()
+            ticker.updateStats()
+
+            print("done one")
 
         except Exception as e:
             # There is an overlap in dates, so a UNIQUE constraint error will be thrown, but should be ignored
@@ -155,7 +158,7 @@ def current():
     # get todays date and format to month/day/year
     today = datetime.datetime.today().strftime('%m-%d-%Y')
     
+    # data = getSenatorData(today)
     data = getSenatorData("12/24/2021")
-    data = getSenatorData(today)
 
     updateDB(data)
