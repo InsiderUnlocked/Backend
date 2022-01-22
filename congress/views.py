@@ -123,16 +123,27 @@ class CongressPersonViewSet(viewsets.ModelViewSet):
         # Get the id of the congress person passed into the URL 
         # Django Search-Bar-Like Functionality to match a name to a congress person object from the database
         # https://docs.djangoproject.com/en/dev/ref/contrib/admin/#django.contrib.admin.ModelAdmin.search_fields
-        # congressPerson = CongressPerson.objects.filter(fullName__icontains=name).first()
-        congressPerson = CongressPerson.objects.filter(
-            Q(fullName__icontains=name) | 
-            Q(firstName__icontains=firstName) | 
-            Q(lastName__icontains=lastName) | 
+        congressPerson = CongressPerson.objects.filter(fullName__icontains=name).first()
+        # congressPerson = CongressPerson.objects.filter(
+        #     Q(fullName__icontains=name) | 
+        #     Q(firstName__icontains=firstName) | 
+        #     Q(lastName__icontains=lastName) 
+        # ).first()
+        print(congressPerson)
 
-            Q(fullName__icontains=name.split()) | 
-            Q(firstName__icontains=name.split()) | 
-            Q(lastName__icontains=name.split()) 
-        ).first()
+        if not(congressPerson):
+            congressPerson = CongressPerson.objects.filter(
+                Q(fullName__icontains=name) | 
+                Q(firstName__icontains=firstName) | 
+                Q(lastName__icontains=lastName) | 
+
+                Q(fullName__icontains=name.split()) | 
+                Q(firstName__icontains=name.split()) | 
+                Q(lastName__icontains=name.split()) 
+            ).first()
+    
+            print(congressPerson)
+
 
         # Get all transactions by congress person
         queryset = CongressTrade.objects.filter(name=congressPerson)
@@ -219,6 +230,8 @@ class CongressStatsViewSet(viewsets.ModelViewSet):
             Q(firstName__icontains=name.split()) | 
             Q(lastName__icontains=name.split()) 
         )
+
+        print(queryset)
 
         return queryset 
 
