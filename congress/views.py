@@ -98,20 +98,20 @@ class TickerViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # Query Database for the ticker id  
         ticker = Ticker.objects.get(ticker=self.kwargs['ticker'])
-        name = self.request.query_params.get('name')
+               
         transactionType = self.request.query_params.get('transactionType')
+        keywords = self.request.query_params.get('name')
+        
+        queryset = CongressTrade.objects.filter(ticker=ticker) 
+        
+        if len(keywords) > 0:
+            queryset = queryset.filter(name__fullName__icontains=keywords)        
 
-        if name is not None or transactionType is not None:
-            if name is None:
-                queryset = CongressTrade.objects.filter(ticker=ticker, transactionType=transactionType).order_by('-transactionDate')        
-            else:
-                queryset = CongressTrade.objects.filter(ticker=ticker, name__fullName__contains=name).order_by('-transactionDate')        
-            print(queryset)
-        else:
-            # Use the ticker id to filter all transactions which contain that ticker id
-            queryset = CongressTrade.objects.filter(ticker=ticker).order_by('-transactionDate')        
+        if len(transactionType) > 0:
+            queryset = queryset.filter(transactionType=transactionType)    
 
-        return queryset
+        return queryset.order_by('-transactionDate')
+
     # Serialize and Paginate the data    
     def retrieve(self, request, *args, **kwargs):
         # Get the queried data
@@ -124,7 +124,6 @@ class TickerViewSet(viewsets.ModelViewSet):
         serializer = CongressTradeSerializer(result_page, many=True)
         
         return self.get_paginated_response(serializer.data)
-
 # government/congress-trades endpoint
 # Returns all of the Congress Transactions
 class CongressPersonViewSet(viewsets.ModelViewSet):

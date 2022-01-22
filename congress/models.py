@@ -25,7 +25,7 @@ def getSumMid(transactions):
     
 
     sumMin = 0
-    sumMax = 0 
+    sumMax = 0
 
     # iterate through the amount of each transaction 
     # O(N) iteration on this loop through use of hashmap (Improved from previous O(N^2) iteration)))
@@ -35,6 +35,8 @@ def getSumMid(transactions):
         sumMax += listOfAmounts[str(transactions[i].amount)][1]
     
     sumMid = (sumMax + sumMin) / 2
+
+    return sumMid
 
 # Names of Congress
 class CongressPerson(models.Model):
@@ -218,7 +220,7 @@ class SummaryStat(models.Model):
             total=transactions.count(), 
             purchases=transactions.filter(transactionType='Purchase').count(), 
             sales=transactions.filter(transactionType__startswith='Sale').count(),
-            totalVolume=sumMid(transactions), 
+            totalVolume=getSumMid(transactions), 
         )
 
 # Signals to update total transactions for each congress member
