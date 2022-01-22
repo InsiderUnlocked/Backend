@@ -1,7 +1,7 @@
 # @Author: Farhan Rehman
 # Purpose: update database every 24 hours by fetching data from a webside and inserting it into our databse
 
-# Import Libraries
+# Imports
 from apscheduler.schedulers.background import BackgroundScheduler
 from django_apscheduler.jobstores import register_events, DjangoJobStore
 
@@ -31,12 +31,17 @@ def updateDB():
     
     logging.info("Database Updated")
 
+# Function creates a scheduler and registers the updateDB function to run every 24 hours
 def start():
+    # Initilaize background scheduler
     scheduler = BackgroundScheduler()
     scheduler.add_jobstore(DjangoJobStore(), 'djangojobstore')
-    # Updates database every 24 hours
+    
+    # Set schedule touUpdates database every 24 hours
     scheduler.add_job(updateDB, 'interval', days=1)
 
+    # register schculed events
     register_events(scheduler)
 
+    # Start scheduler
     scheduler.start()

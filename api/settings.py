@@ -1,12 +1,12 @@
+# Django Generated File
+
+# Imports
 from pathlib import Path
-import os
 import django_heroku
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-@pjg9qxmzt%x%84_%@6&@-9fhxz%1espf(3z22j!oi03^ovcfi'
@@ -14,9 +14,10 @@ SECRET_KEY = 'django-insecure-@pjg9qxmzt%x%84_%@6&@-9fhxz%1espf(3z22j!oi03^ovcfi
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Hosts or domains that our site can host  
 ALLOWED_HOSTS = ['insiderunlocked.herokuapp.com/']
 
-# Application definition
+# All packages that are installed and used in this django instance
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -34,12 +35,12 @@ INSTALLED_APPS = [
     'django_apscheduler',
 ]
 
-# Heroku APSscheduler settings
-APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"  # Default
+# Heroku APSscheduler settings for scheduled tasks
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 SCHEDULER_DEFAULT = True
-# APSCHEDULER_RUN_NOW_TIMEOUT = 25 # Seconds
 
-
+"Middleware is a framework of hooks into Django’s request/response processing. It’s a light, low-level “plugin” system for globally altering Django’s input or output."
+# https://docs.djangoproject.com/en/4.0/topics/http/middleware/
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -53,14 +54,14 @@ MIDDLEWARE = [
 ]
 
 
-# Enabling CORS to 
+# Enabling CORS to allow resource sharing between backend and frontend 
 CORS_ALLOW_ALL_ORIGINS = True # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
 CORS_ALLOW_CREDENTIALS = True
+# Whitelisting domains that the app can share resources with
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'https://insiderunlocked.web.app',
 ] 
-# If this is used, then not need to use `CORS_ALLOW_ALL_ORIGINS = True`
 CORS_ALLOWED_ORIGIN_REGEXES = [
     'http://localhost:3000',
     'https://insiderunlocked.web.app',
@@ -83,7 +84,9 @@ REST_FRAMEWORK = {
     }
 }
 
+# Stating that the main urls file is located in api/urls.py
 ROOT_URLCONF = 'api.urls'
+
 
 TEMPLATES = [
     {
@@ -101,12 +104,12 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'api.wsgi.application'
 
+# Stating that the application variable is in the wsgi file: api/wsgi.py --> application 
+WSGI_APPLICATION = 'api.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -117,7 +120,6 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -136,7 +138,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -150,9 +151,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-
-from pathlib import Path
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 STATIC_URL = '/static/'
@@ -160,9 +158,10 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-
+# Automatically adds a unique incremented id to each object
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Set max amounts of rows can be inserted/deleted/updated in one single SQL query
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 20000
 
 # Activate Django-Heroku.

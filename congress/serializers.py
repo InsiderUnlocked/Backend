@@ -28,12 +28,13 @@ class CongressTradeSerializer(serializers.ModelSerializer):
 
     firstName = ReadOnlyField(source='name.firstName')
     lastName = ReadOnlyField(source='name.lastName')
+    bioguide = ReadOnlyField(source='name.bioguide')
 
     class Meta:
         # Database table
         model = CongressTrade
         # Fields to appear on the response
-        fields = ('name', 'firstName', 'lastName', 'ticker', 'transactionDate', 'assetType', 'transactionType', 'amount',  'ptrLink')
+        fields = ('name', 'firstName', 'bioguide','lastName', 'ticker', 'transactionDate', 'assetType', 'transactionType', 'amount',  'ptrLink')
 
 class SummaryStatSerializer(serializers.ModelSerializer):
     class Meta:
