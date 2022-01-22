@@ -210,7 +210,7 @@ class CongressStatsViewSet(viewsets.ModelViewSet):
         lastName = name.split()[-1]
 
         # Get the id of the congress person passed into the URL 
-        congressPerson = CongressPerson.objects.filter(
+        queryset = CongressPerson.objects.filter(
             Q(fullName__icontains=name) | 
             Q(firstName__icontains=firstName) | 
             Q(lastName__icontains=lastName) | 
@@ -218,9 +218,7 @@ class CongressStatsViewSet(viewsets.ModelViewSet):
             Q(fullName__icontains=name.split()) | 
             Q(firstName__icontains=name.split()) | 
             Q(lastName__icontains=name.split()) 
-        ).first()
-
-        print(queryset)
+        )
 
         return queryset 
 
