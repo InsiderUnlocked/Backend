@@ -2,10 +2,12 @@
 # Purpose: The purpose of this script is to populate the database with historical data, and then update the database with the current data.
 
 # Imports
+from django.db.models import Q
+
 from .models import CongressPerson, Ticker, CongressTrade
 from .scripts.senators import main as getSenatorData
 from .scripts.ticker import getTickerData
-from django.db.models import Q
+
 import datetime
 import logging
 import json

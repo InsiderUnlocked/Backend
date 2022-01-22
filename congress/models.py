@@ -3,8 +3,10 @@
 
 # Imports 
 from django.db.models import signals
-from .signals import tradesCount, summaryStatUpdate, tickerStatUpdate, congressPersonStatUpdate
 from django.db import models
+
+from .signals import summaryStatUpdate, tickerStatUpdate, congressPersonStatUpdate
+
 from jsonfield import JSONField
 import datetime
 

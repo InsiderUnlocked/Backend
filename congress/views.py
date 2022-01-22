@@ -1,19 +1,17 @@
-# Import Libraries
+# @Author Farhan Rehman
+
+# Imports
 from django_filters.rest_framework import DjangoFilterBackend
-# Import Libraries
+from django.db.models import Q
+
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework import viewsets, permissions
-from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework import filters
+
 from .serializers import CongressPersonSerializer, CongressTradeSerializer, SummaryStatSerializer, TickerSerializer
 from .models import CongressPerson, CongressTrade, Ticker, SummaryStat
-
-from django.core.management import call_command
-from django.db.models import Q
-import datetime
-
-import logging
 
 # government/congress-trades endpoint
 # Returns all of the Congress Transactions
@@ -29,9 +27,11 @@ class AllCongressViewSet(viewsets.ModelViewSet):
 
     # Adding Logic to filter the data
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    # Filtering by ticker, full name, and transaction type (buy/sell)
     filterset_fields = ['ticker__ticker', 'name__fullName', 'transactionType']
+    # Searching by ticker, full name, and transaction type (buy/sell)
     search_fields = ['ticker__ticker', 'name__fullName', 'transactionType']
-    # ordering_fields = ['ticker', 'name']
+    # Ordering by results by transaction date (newest first)
     ordering = ['-transactionDate']
 
 
@@ -47,7 +47,9 @@ class AllCongressPeopleViewSet(viewsets.ModelViewSet):
     
     # Adding Logic to filter the data
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    # Filtering by full name
     filterset_fields = ['fullName']
+    # Searching by full name
     search_fields = ['fullName']
 
 # government/ticker endpoint
@@ -68,11 +70,14 @@ class TickerViewSet(viewsets.ModelViewSet):
 
         # Query Database for the ticker id  
         ticker = Ticker.objects.get(ticker=tickerStr)
-            
+        
+        # accept transactions type and name parametes from the url in addition
         transactionType = self.request.query_params.get('transactionType')
         name = self.request.query_params.get('name')
         
+        # Query Database for all transactions using the ticker id
         queryset = CongressTrade.objects.filter(ticker=ticker) 
+        
         
         if name is not None:
             if len(name) > 0:

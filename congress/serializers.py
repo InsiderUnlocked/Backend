@@ -1,10 +1,11 @@
 # @Author: Farhan Rehman
-# Purpose: Converts SQLite data to JSON
+# Purpose: Converts SQLite queries response to JSON
 
 # Imports
 from rest_framework.serializers import ModelSerializer, ReadOnlyField
-from .models import CongressTrade, CongressPerson, Ticker, SummaryStat
 from rest_framework import serializers
+
+from .models import CongressTrade, CongressPerson, Ticker, SummaryStat
 
 # Abstraction is integrated due to django within all of these classes
 class TickerSerializer(serializers.ModelSerializer):
@@ -13,7 +14,6 @@ class TickerSerializer(serializers.ModelSerializer):
         model = Ticker
         # Fields to appear on the response
         fields = ('ticker', 'company', 'marketcap', 'sector', 'industry', 'totalTransactions', 'totalVolumeTransactions', 'purchases', 'sales',)
-        # fields = '__all__'
 
 class CongressPersonSerializer(serializers.ModelSerializer):
     class Meta:
@@ -42,4 +42,5 @@ class SummaryStatSerializer(serializers.ModelSerializer):
         # Database table
         model = SummaryStat
         # Fields to appear on the response
+        # __all__ includes all fields in the model in the response
         fields = "__all__"

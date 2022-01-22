@@ -1,6 +1,7 @@
+# @Author: Mohammed-Al Rasheed
 # Purpose: Registering all the endpoints
 
-# Import Libraries
+# Imports 
 from django.urls import include, path
 from rest_framework import routers
 from . import views
@@ -33,5 +34,4 @@ router.register(r'congress-stats', views.CongressStatsViewSet, basename='congres
 # Wire up our API using automatic URL routing.
 urlpatterns = [
     path('government/', include(router.urls)),
-    # path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
