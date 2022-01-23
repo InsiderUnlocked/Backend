@@ -10,10 +10,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+# SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = "django-insecure-@pjg9qxmzt%x%84_%@6&@-9fhxz%1espf(3z22j!oi03^ovcfi"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+# DEBUG = False
+DEBUG = True
 
 # Hosts or domains that our site can host  
 ALLOWED_HOSTS = ['insiderunlocked.herokuapp.com/']

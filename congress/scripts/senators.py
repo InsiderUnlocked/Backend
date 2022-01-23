@@ -90,7 +90,7 @@ def getReports(csrfToken, start, reportType, startDate, lastName):
         # loop through the data
         for record in records:
             # get the name from record array. The name will always be the second index in the array
-            name = record[2]
+            name = record[0] + " " + record[1]
             # get the link from the array. The link will always be the third index in the array
             link = record[3]
             # get the notification date from the array. The notification date  will always be the foruth index in the array
@@ -232,10 +232,10 @@ def main(startDate):
     dfJson = df.to_json(orient='records')
     parsedJson = json.loads(dfJson)
 
-    # outfile = open('transactions.json', 'a', encoding='utf-8')
-    # outfile.write(json.dumps(parsedJson, ensure_ascii=False, indent=4))
-    # # outfile.write(",\n")
-    # outfile.close()
+    outfile = open('transactions.json', 'a', encoding='utf-8')
+    outfile.write(json.dumps(parsedJson, ensure_ascii=False, indent=4))
+    # outfile.write(",\n")
+    outfile.close()
     
     return parsedJson
 

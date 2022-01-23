@@ -66,19 +66,22 @@ def getCongressPerson(name):
 
         # Django Search-Bar-Like Functionality to match a name to a congress person object from the database
         # https://docs.djangoproject.com/en/dev/ref/contrib/admin/#django.contrib.admin.ModelAdmin.search_fields
-        congressPerson = CongressPerson.objects.filter(
-            Q(fullName__icontains=name) | 
-            Q(firstName__icontains=name) | 
-            Q(lastName__icontains=name) |
+        congressPersonObj = CongressPerson.objects.filter(Q(fullName__icontains=name) | Q(firstName__icontains=firstName) & Q(lastName__icontains=lastName)).first()
+        # congressPerson = CongressPerson.objects.filter(
+            # Q(fullName__icontains=name) | 
+            # Q(firstName__icontains=name) | 
+            # Q(lastName__icontains=name) |
 
-            Q(fullName__icontains=firstName) | 
-            Q(firstName__icontains=firstName) | 
-            Q(lastName__icontains=firstName) |
+            # Q(fullName__icontains=firstName) | 
+            # Q(firstName__icontains=firstName) | 
+            # Q(lastName__icontains=firstName) |
 
-            Q(fullName__icontains=lastName) | 
-            Q(firstName__icontains=lastName) | 
-            Q(lastName__icontains=lastName)
-        ).first()
+            # Q(fullName__icontains=lastName) | 
+            # Q(firstName__icontains=lastName) | 
+            # Q(lastName__icontains=lastName)
+        # ).first()
+
+        return congressPerson
 
     except Exception as e:
         logging.error("Error while creating a congress person object")
@@ -89,6 +92,7 @@ def getCongressPerson(name):
 # Update Database
 # Parameter: data (json)
 def updateDB(data):
+    congressTradesObjs = []
 
     for row in data:
         # Get all values in a variable
@@ -125,35 +129,53 @@ def updateDB(data):
 
         # Create Congress Trade Object and add it to objs
         try:
-            CongressTrade.objects.get_or_create(
-                name=congressPerson,
-                ticker=ticker, 
-                transactionDate=transactionDate, 
-                disclosureDate=notificationDate, 
-                transactionType=transactionType, 
-                amount=amount, 
-                owner=owner, 
-                assetDescription=assetDescription, 
-                assetDetails=assetDetails,
-                assetType=assetType, 
-                comment=comment, 
-                pdf=False, 
-                ptrLink=source
-            )
-            # update congress person object
-            congressPerson.updateStats()
-            ticker.updateStats()
+            congressTradesObjs.append(
+                CongressTrade(
+                    name=congressPerson,
+                    ticker=ticker, 
+                    transactionDate=transactionDate, 
+                    disclosureDate=notificationDate, 
+                    transactionType=transactionType, 
+                    amount=amount, 
+                    owner=owner, 
+                    assetDescription=assetDescription, 
+                    assetDetails=assetDetails,
+                    assetType=assetType, 
+                    comment=comment, 
+                    pdf=False, 
+                    ptrLink=source
+                )
+            )            
+            print(name)
 
         except Exception as e:
             # There is an overlap in dates, so a UNIQUE constraint error will be thrown, but should be ignored
             logging.error("Error while creating a congress trade object")
+            print(name)
             logging.error(e)
             continue
+    
+    # Bulk create all the objects
+    CongressTrade.objects.bulk_create(congressTradesObjs, ignore_conflicts=True)
+
+def updateTickerStats():
+    tickerObjs = Ticker.objects.all()
+    for ticker in tickerObjs:   
+        ticker.updateStats()
+
+def updateCongressPersonStats():
+    congressPersonObjs = CongressPerson.objects.all()
+    for congressPerson in congressPersonObjs:
+        congressPerson.updateStats()
 
 def historical():
     # Load historical data  
     data = json.load(open("./congress/scripts/data/transactions.json"))
     updateDB(data)
+    
+    # Update the CongressPerson and Ticker summary stats 
+    updateTickerStats()
+    updateCongressPersonStats()
 
 def current():
     # use senators script to get current data  
@@ -162,7 +184,12 @@ def current():
     today = datetime.datetime.today().strftime('%m-%d-%Y')
     
     # get data from API
-    data = getSenatorData(today)
+    # data = getSenatorData(today)
+    data = getSenatorData("1/1/2022")
     
     # call update database function
     updateDB(data)
+
+    # Update the CongressPerson and Ticker summary stats 
+    updateTickerStats()
+    updateCongressPersonStats()

@@ -29,6 +29,8 @@ class Command(BaseCommand):
         except: 
             logging.error("Updating CongressPerson table")
 
+        print("done")
+
         # Add Ticker Table (load it in from json file as it takes a lot of time to load it)
         try:
             call_command('loaddata', 'ticker.json')
@@ -37,13 +39,18 @@ class Command(BaseCommand):
             logging.error("Updating Tickers table")
             logging.error(e)
 
+        print("done")
         # Load the transactions into the database from the transactions.json file and add it to the database
         try: 
-            historicalPopulate()
+            try:
+                historicalPopulate()
+            except Exception as e:
+                print(e)
             logging.info("Finished populating historical congress trades")
         except: 
             logging.error("Updating Historical CongressTrades table")
 
+        print("done")
         # Add the most recent transactions into the database
         try: 
             currentPopulate()
@@ -51,6 +58,7 @@ class Command(BaseCommand):
         except: 
             logging.error("Updating Current CongressTrades table")
         
+        print("done")
 
         # Create the Summary Stats and update them to populate them with recent data
         try:
@@ -67,4 +75,5 @@ class Command(BaseCommand):
             print(e)
             logging.error("ERROR: creating Summary Stats table")
 
+        print("done")
         logging.info("Database Updated")
