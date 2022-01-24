@@ -17,5 +17,6 @@ def cleanText(text):
     # Remove duplicate whitespaces characters 
     text = re.sub('\s+', ' ', text).strip()
     
+    # Retur the text as a string
     return str(text)
 

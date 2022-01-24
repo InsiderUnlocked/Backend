@@ -54,7 +54,6 @@ def bypassTOS():
         return csrfToken
     except Exception as e:
         logging.error("Error in bypassTOS function: " + e)
-        raise e
 
 
 
@@ -87,6 +86,10 @@ def getReports(csrfToken, start, reportType, startDate, lastName):
         jsonResponse = response.json()
         records = jsonResponse['data']
 
+        # if records is empty, then exit the script
+        if records == []:
+            return records
+
         # loop through the data
         for record in records:
             # get the name from record array. The name will always be the second index in the array
@@ -109,8 +112,7 @@ def getReports(csrfToken, start, reportType, startDate, lastName):
         if start != numOfPages:
             return getReports(csrfToken, start+100, reportType, startDate, lastName)
     except Exception as e:
-        logging.error("Error in getReports function: " + e)
-        raise e
+        logging.error("Error in getReports function: " + str(e))
     
     
 
@@ -205,9 +207,8 @@ def parseHTML(csrfToken, link, name, notificationDate):
         # Avoid rate limit on website by delaying the program for two seconds
         time.sleep(2)
     except Exception as e:
+        # Log the error for debugging purposes as we scale the database
         logging.error('Error occured in the parseHTML function: ' + e)
-        print(link)
-        raise e
 
 # @Author: Mohammed-Al Rasheed
 def main(startDate):
@@ -230,11 +231,10 @@ def main(startDate):
     dfJson = df.to_json(orient='records')
     parsedJson = json.loads(dfJson)
 
-    outfile = open('transactions.json', 'a', encoding='utf-8')
-    outfile.write(json.dumps(parsedJson, ensure_ascii=False, indent=4))
-    # outfile.write(",\n")
-    outfile.close()
+    # Write to json file
+    # outfile = open('transactions.json', 'a', encoding='utf-8')
+    # outfile.write(json.dumps(parsedJson, ensure_ascii=False, indent=4))
+    # # outfile.write(",\n")
+    # outfile.close()
     
     return parsedJson
-
-# main("1/1/2018")

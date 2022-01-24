@@ -1,4 +1,4 @@
-# @Author Farhan Rehman
+# @Author: Mohammed-Al Rasheed
 # Purpose: Customizes admin table view
 
 # Import Libraries
@@ -28,7 +28,9 @@ class CongressTradeAdmin(admin.ModelAdmin):
     # Field that we are searching for
     search_fields = ['name__fullName']
 
+    # Customize the admin table view by getting a variable that belongs to the name field
     def name_fullName(self, obj):
+        # Get the fullName field by accessing the objects name field, then the names fullName field
         return obj.name.fullName
 
 

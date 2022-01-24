@@ -1,7 +1,7 @@
-# @Author: Farhan Rehman
+# @Author: Mohammed-Al Rasheed
 # Purpose: Registering app (congress folder) with django
 
-# Import Libraries
+# Imports
 from django.apps import AppConfig
 from django.conf import settings
 
@@ -14,5 +14,6 @@ class CongressConfig(AppConfig):
     def ready(self):
         from api import operator
         if settings.SCHEDULER_DEFAULT:
+            # Start the scheduler
             operator.start()
 

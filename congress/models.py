@@ -49,40 +49,24 @@ def getSumMid(transactions):
 
 # Names of Congress
 class CongressPerson(models.Model):
-    # bioguide
     # A CharField is a character field
     # max_length is the maximum number of characters
-    # unique is a boolean value that determines if the field is unique
-
-    # bioguide = models.CharField(max_length=100, unique=True)
-    # # first name
-    # firstName = models.CharField(max_length=1000)
-    
-    # # last name
-    # lastName = models.CharField(max_length=1000)
-    
+    # unique is a boolean value that determines if the field is unique    
     # full name
     fullName = models.CharField(max_length=1000, unique=True)
     
-    # current party
+    # current party of senator
     currentParty = models.CharField(max_length=100) 
     
-    # current chamber
+    # current chamber of senator
     currentChamber = models.CharField(max_length=100)
     
-    # current state
+    # current state of senator
     currentState = models.CharField(max_length=100)
     
     # congress person image
     image = models.CharField(max_length=10000)
-    
-    # terms
-    # JSONField is a field that can store a JSON object
-    # default is the default value of the field, which we set to as None
-    # blank is a boolean value which indicates if a field can be blank ("")
-    # null is a boolean value which indicates if a field can be null (None)
-    termsServed = models.JSONField(default=None, blank=True, null=True)
-    
+        
     # total transactions
     # An integer field hold a integer of max value 2147483647
     totalTransactions = models.IntegerField(default=0)
@@ -90,9 +74,10 @@ class CongressPerson(models.Model):
     # Total Volume of transactions
     totalVolumeTransactions = models.IntegerField(blank=True, null=True, default=0)
 
-    # purchase
+    # Number of purchase that the senator has made
     purchases = models.IntegerField(blank=True, null=True, default=0)
-    # sales
+    
+    # Number of sales that the senator has made
     sales = models.IntegerField(blank=True, null=True, default=0)
 
     # String representation of object
@@ -161,20 +146,18 @@ class Ticker(models.Model):
         transactions = CongressTrade.objects.filter(ticker=self)
 
         # update model
-        try:
-            Ticker.objects.filter(ticker=self).update(
-                # Count number of transactions
-                totalTransactions=transactions.count(), 
-                # Calculate the number of purchases 
-                purchases=transactions.filter(transactionType='Purchase').count(), 
-                # Calculate the number of Sales
-                # Here we use "startswith" because we have two options: "Sale (Full)" and "Sale (Partial)". Both of those options start with "Sale"
-                sales=transactions.filter(transactionType__startswith='Sale').count(),
-                # Calculate the total volume of transactions
-                totalVolumeTransactions=getSumMid(transactions), 
-            )
-        except Exception as e:
-            print("ERROR: ", str(e))
+        Ticker.objects.filter(ticker=self).update(
+            # Count number of transactions
+            totalTransactions=transactions.count(), 
+            # Calculate the number of purchases 
+            purchases=transactions.filter(transactionType='Purchase').count(), 
+            # Calculate the number of Sales
+            # Here we use "startswith" because we have two options: "Sale (Full)" and "Sale (Partial)". Both of those options start with "Sale"
+            sales=transactions.filter(transactionType__startswith='Sale').count(),
+            # Calculate the total volume of transactions
+            totalVolumeTransactions=getSumMid(transactions), 
+        )
+
     
 
 # Signals to update total transactions for each congress member

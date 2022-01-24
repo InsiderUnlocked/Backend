@@ -27,10 +27,6 @@ class CongressTradeSerializer(serializers.ModelSerializer):
     name = ReadOnlyField(source='name.fullName')
     ticker = ReadOnlyField(source='ticker.ticker')
 
-    # firstName = ReadOnlyField(source='name.firstName')
-    # lastName = ReadOnlyField(source='name.lastName')
-    # bioguide = ReadOnlyField(source='name.bioguide')
-
     class Meta:
         # Database table
         model = CongressTrade

@@ -19,7 +19,7 @@ class AllCongressViewSet(viewsets.ModelViewSet):
     # Permission needed to access endpoint
     permission_classes = (permissions.AllowAny,)
     
-    # Querying database to get all the transactions
+    # Querying database to get all the transactions objects
     queryset = CongressTrade.objects.all()
 
     # Serializing the data (converting to JSON)
@@ -127,7 +127,7 @@ class CongressPersonViewSet(viewsets.ModelViewSet):
         transactionType = self.request.query_params.get('transactionType')
         ticker = self.request.query_params.get('ticker')
 
-        # Query Database for the bioguide id
+        # Query Database for the name
         congressPerson = CongressPerson.objects.get(fullName=fullName)
 
         # Get all transactions by congress person

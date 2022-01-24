@@ -14,11 +14,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-@pjg9qxmzt%x%84_%@6&@-9fhxz%1espf(3z22j!oi03^ovcfi"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = False
 DEBUG = True
 
 # Hosts or domains that our site can host  
-ALLOWED_HOSTS = ['insiderunlocked.herokuapp.com/']
+ALLOWED_HOSTS = ['insiderunlocked.herokuapp.com/', 'http://localhost:8000/']
 
 # All packages that are installed and used in this django instance
 INSTALLED_APPS = [
