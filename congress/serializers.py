@@ -27,6 +27,9 @@ class CongressTradeSerializer(serializers.ModelSerializer):
     name = ReadOnlyField(source='name.fullName')
     ticker = ReadOnlyField(source='ticker.ticker')
 
+    if ticker == None:
+        ticker = "-"
+
     class Meta:
         # Database table
         model = CongressTrade
