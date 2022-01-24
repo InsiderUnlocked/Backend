@@ -19,7 +19,9 @@ def getTicker(stockTicker):
     try:
         # If the ticker is equal to "--", or "-" then return None as it is not a stock ticker 
         if stockTicker == "--" or stockTicker == "-":
+            # If the stock ticker is equal to "-" then get or create a Ticker object with the ticker name of "-"
             tickerObj, created = Ticker.objects.get_or_create(ticker="-")
+            # return the object
             return tickerObj
 
         # Check to see if the stock ticker is already in the database, if not, create it
