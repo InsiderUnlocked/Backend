@@ -22,7 +22,10 @@ def getTickerData(ticker):
 
     # get the market cap
     marketcap = data.info['marketCap']
+
+    # determine if its a etf
+    quoteType = data.info['quoteType']
     
     # return the data
-    return sector, industry, company, marketcap
+    return sector, industry, company, marketcap, quoteType
 

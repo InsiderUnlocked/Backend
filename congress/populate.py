@@ -18,7 +18,7 @@ import time
 def getTicker(stockTicker):
     try:
         # If the ticker is equal to "--", then return None as it means the asset type is not a stock 
-        if stockTicker == "--":
+        if stockTicker == "--" or stockTicker == "-":
             return None
 
         # Check to see if the stock ticker is already in the database, if not, create it
@@ -26,21 +26,33 @@ def getTicker(stockTicker):
         # created is a boolean value which indicates if the object has been created or not
         tickerObj, created = Ticker.objects.get_or_create(ticker=stockTicker)
 
+        # Edge case: dont look for information for stock tickers that have periods or dashes in them
         # If the stock ticker has just beed created
-        if created == True:
-            # Get more data about the stock ticker
-            sector, industry, company, marketcap = getTickerData(stockTicker)
-            
-            # Assign the stock ticker information to the newly created ticker object 
-            tickerObj.sector = sector
-            tickerObj.industry = industry
-            tickerObj.company = company
-            tickerObj.marketcap = marketcap
-            
-            # Save the changes to the database
-            tickerObj.save()
-        
-        return tickerObj
+        try:
+            if created == True and '.' not in stockTicker and '-' not in stockTicker:
+                # Get more data about the stock ticker
+                sector, industry, company, marketcap, quoteType = getTickerData(stockTicker)
+                
+                if quoteType != "ETF":
+                    # Assign the stock ticker information to the newly created ticker object 
+                    tickerObj.sector = sector
+
+                    tickerObj.industry = industry
+
+                    tickerObj.company = company
+
+                    tickerObj.marketcap = marketcap
+                else:
+                    # If the ticker is an ETF, then set the sector to "ETF" ()
+                    tickerObj.sector = quoteType
+
+                # Save the changes to the database
+                tickerObj.save()
+    
+                return tickerObj
+        except:
+            return tickerObj
+
     except Exception as e:
         logging.error("Error while creating a stock ticker object")
         logging.error(e)
@@ -53,34 +65,17 @@ def getCongressPerson(name):
         # find congress person object in database table CongressPerson
         # "Collins, Susan M. (Senator)" --> "Susan M. Collins"
         # add everything before the comma to everything after the comma
-        name =  name.split(',')[-1] + " " + name.split(',')[0]
 
         # remove trailing whitespace
         name = name.strip()
         # replace commas
         name = name.replace(",", "")
+        # remove periods
+        name = name.replace(".", "")
 
-        # get the first and last name by 
-        firstName = name.split()[0]
-        lastName = name.split()[-1]
-
-        # Django Search-Bar-Like Functionality to match a name to a congress person object from the database
-        # https://docs.djangoproject.com/en/dev/ref/contrib/admin/#django.contrib.admin.ModelAdmin.search_fields
-        congressPerson = CongressPerson.objects.filter(Q(fullName__icontains=name) | Q(firstName__icontains=firstName) | Q(lastName__icontains=lastName)).first()
+        # Create a Congress Person Object
+        congressPerson, created = CongressPerson.objects.get_or_create(fullName=name)
         
-        # congressPerson = CongressPerson.objects.filter(
-        #     Q(fullName__icontains=name) | 
-        #     Q(firstName__icontains=name) | 
-        #     Q(lastName__icontains=name) |
-
-        #     Q(fullName__icontains=firstName) | 
-        #     Q(firstName__icontains=firstName) | 
-        #     Q(lastName__icontains=firstName) |
-
-        #     Q(fullName__icontains=lastName) | 
-        #     Q(firstName__icontains=lastName) | 
-        #     Q(lastName__icontains=lastName)
-        # ).first()
 
         return congressPerson
 
@@ -144,14 +139,10 @@ def updateDB(data):
                     ptrLink=source
                 )
             )            
-
-            if congressPerson == None:
-                print(name)
                 
         except Exception as e:
             # There is an overlap in dates, so a UNIQUE constraint error will be thrown, but should be ignored
             logging.error("Error while creating a congress trade object")
-            print(name)
             logging.error(e)
             continue
     

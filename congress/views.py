@@ -43,7 +43,7 @@ class AllCongressPeopleViewSet(viewsets.ModelViewSet):
     # Convering the data to JSON
     serializer_class = CongressPersonSerializer
     # Querying database for all senators that have made at least one or more transactions
-    queryset = CongressPerson.objects.filter(totalTransactions__gt=0).order_by('firstName')
+    queryset = CongressPerson.objects.filter(totalTransactions__gt=0).order_by('fullName')
     
     # Adding Logic to filter the data
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]

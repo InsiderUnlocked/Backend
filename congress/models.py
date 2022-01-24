@@ -53,15 +53,16 @@ class CongressPerson(models.Model):
     # A CharField is a character field
     # max_length is the maximum number of characters
     # unique is a boolean value that determines if the field is unique
-    bioguide = models.CharField(max_length=100, unique=True)
-    # first name
-    firstName = models.CharField(max_length=1000)
+
+    # bioguide = models.CharField(max_length=100, unique=True)
+    # # first name
+    # firstName = models.CharField(max_length=1000)
     
-    # last name
-    lastName = models.CharField(max_length=1000)
+    # # last name
+    # lastName = models.CharField(max_length=1000)
     
     # full name
-    fullName = models.CharField(max_length=1000)
+    fullName = models.CharField(max_length=1000, unique=True)
     
     # current party
     currentParty = models.CharField(max_length=100) 
@@ -106,7 +107,7 @@ class CongressPerson(models.Model):
         transactions = CongressTrade.objects.filter(name=self)
 
         # update model
-        CongressPerson.objects.filter(bioguide=self.bioguide).update(
+        CongressPerson.objects.filter(fullName=self.fullName).update(
             # Count number of transactions
             totalTransactions=transactions.count(),
             purchases=transactions.filter(transactionType='Purchase').count(), 
@@ -127,15 +128,15 @@ class Ticker(models.Model):
     ticker = models.CharField(max_length=100, unique=True)
     
     # company name 
-    company = models.CharField(max_length=1000)
+    company = models.CharField(max_length=1000, null=True)
 
     # marketcap 
     # Big Integer Field is a field that can store a large integer value (the regular integerfields can only hold max 2147483647, and we need to store bigger values for a stocks marketcap)
     marketcap = models.BigIntegerField(blank=True, null=True)
     # sector
-    sector = models.CharField(max_length=1000)
+    sector = models.CharField(max_length=1000, null=True)
     # industry
-    industry = models.CharField(max_length=1000)
+    industry = models.CharField(max_length=1000, null=True)
 
     # Signals to update total transactions for each congress member
     # total transactions it occured in
@@ -174,6 +175,7 @@ class Ticker(models.Model):
             )
         except Exception as e:
             print("ERROR: ", str(e))
+    
 
 # Signals to update total transactions for each congress member
 signals.post_save.connect(tickerStatUpdate, sender=Ticker)
@@ -229,7 +231,6 @@ class CongressTrade(models.Model):
     def __str__(self):
         return self.name.fullName
     
-    # Class we can use in django to create a unique_together constraint (can only create fields if they have a different value that an existing one combined with the fields listed), and ordering (orders the trades done by congress by the transaction date)
     # Class we can use in django to create a unique_together constraint (can only create fields if they have a different value that an existing one combined with the fields listed), and ordering (orders the trades done by congress by the transaction date)
     class Meta:
         unique_together = ('disclosureDate', 'transactionDate', 'owner', 'ticker', 'assetDescription', 'assetType', 'transactionType', 'amount', 'comment', 'name', 'pdf', 'ptrLink')

@@ -15,7 +15,7 @@ class TickerAdmin(admin.ModelAdmin):
 # Customize Congress Person admin view
 class CongressPersonAdmin(admin.ModelAdmin):
     # Fields that will appear in the admin table view
-    list_display = ('fullName', 'firstName', 'lastName', 'currentParty', 'currentChamber', 'currentState', 'totalTransactions',)
+    list_display = ('fullName', 'currentParty', 'currentChamber', 'currentState', 'totalTransactions',)
     # Field that we are searching for
     search_fields = ['fullName']
 

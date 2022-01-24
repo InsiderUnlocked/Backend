@@ -21,15 +21,6 @@ class Command(BaseCommand):
         logging.info("Populating database...")
         
         # Call the populate scripts
-        
-        # Add/Update CongressPerson Table (Get all members)
-        try: 
-            updateCongressPersonMain()
-            logging.info("Finished populating congress people table")
-        except: 
-            logging.error("Updating CongressPerson table")
-
-        print("done")
 
         # Add Ticker Table (load it in from json file as it takes a lot of time to load it)
         try:
@@ -39,7 +30,7 @@ class Command(BaseCommand):
             logging.error("Updating Tickers table")
             logging.error(e)
 
-        # print("done")
+        print("done")
         # Load the transactions into the database from the transactions.json file and add it to the database
         try: 
             try:
@@ -59,6 +50,15 @@ class Command(BaseCommand):
             logging.error("Updating Current CongressTrades table")
         
         print("done")
+
+        # Add/Update CongressPerson Table (Get all members)
+        # try: 
+        #     updateCongressPersonMain()
+        #     logging.info("Finished populating congress people table")
+        # except: 
+        #     logging.error("Updating CongressPerson table")
+
+        # print("done")
 
         # Create the Summary Stats and update them to populate them with recent data
         try:
