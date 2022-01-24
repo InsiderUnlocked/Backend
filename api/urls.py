@@ -18,15 +18,15 @@ from drf_yasg import openapi
 
 
 # OTP implementation
-# class OTPAdmin(OTPAdminSite):
-#     pass
+class OTPAdmin(OTPAdminSite):
+    pass
 
-# admin_site = OTPAdmin(name='OTPAdmin')
-# admin_site.register(User)
-# admin_site.register(TOTPDevice)
+admin_site = OTPAdmin(name='OTPAdmin')
+admin_site.register(User)
+admin_site.register(TOTPDevice)
 
-# from django_otp.admin import OTPAdminSite
-# admin.site.__class__ = OTPAdminSite
+from django_otp.admin import OTPAdminSite
+admin.site.__class__ = OTPAdminSite
 
 # Auto Docs
 schema_view = get_schema_view(
