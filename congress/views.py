@@ -114,21 +114,21 @@ class CongressPersonViewSet(viewsets.ModelViewSet):
     # Permission needed to access endpoint
     permission_classes = (permissions.AllowAny,)
     # URL parameter passed into url that also exists in the CongressTrade and CongressPerson models 
-    lookup_field = 'bioguide'
+    lookup_field = 'fullName'
     # Initiliazing our seializer class
     serializer_class = CongressTradeSerializer
         
     # filter by slug in url in django rest framework modelviewset
     def get_queryset(self):
         # Get the name that was passed in the URL
-        bioguide = self.kwargs['bioguide']
+        fullName = self.kwargs['fullName']
 
         # accept transactions type and name parametes from the url in addition
         transactionType = self.request.query_params.get('transactionType')
         ticker = self.request.query_params.get('ticker')
 
         # Query Database for the bioguide id
-        congressPerson = CongressPerson.objects.get(bioguide=bioguide)
+        congressPerson = CongressPerson.objects.get(fullName=fullName)
 
         # Get all transactions by congress person
         queryset = CongressTrade.objects.filter(name=congressPerson)
@@ -204,16 +204,16 @@ class CongressStatsViewSet(viewsets.ModelViewSet):
 # Permission needed to access endpoint
     permission_classes = (permissions.AllowAny,)
     # URL parameter passed into url that also exists in the CongressTrade and CongressPerson models 
-    lookup_field = 'bioguide'
+    lookup_field = 'fullName'
     # Initiliazing our seializer class
     serializer_class = CongressPersonSerializer
     
     # filter by slug in url in django rest framework modelviewset
     def get_queryset(self):
-        bioguide = self.kwargs['bioguide']
+        fullName = self.kwargs['fullName']
 
         # Get the id of the congress person passed into the URL 
-        queryset = CongressPerson.objects.filter(bioguide=bioguide)
+        queryset = CongressPerson.objects.filter(fullName=fullName)
 
         # return queryset
         return queryset 

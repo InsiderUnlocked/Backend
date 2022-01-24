@@ -28,30 +28,28 @@ def getTicker(stockTicker):
 
         # Edge case: dont look for information for stock tickers that have periods or dashes in them
         # If the stock ticker has just beed created
-        try:
-            if created == True and '.' not in stockTicker and '-' not in stockTicker:
-                # Get more data about the stock ticker
-                sector, industry, company, marketcap, quoteType = getTickerData(stockTicker)
-                
-                if quoteType != "ETF":
-                    # Assign the stock ticker information to the newly created ticker object 
-                    tickerObj.sector = sector
+        if created == True and '.' not in stockTicker and '-' not in stockTicker:
+            # Get more data about the stock ticker
+            sector, industry, company, marketcap, quoteType = getTickerData(stockTicker)
+            
+            if quoteType != "ETF":
+                # Assign the stock ticker information to the newly created ticker object 
+                tickerObj.sector = sector
 
-                    tickerObj.industry = industry
+                tickerObj.industry = industry
 
-                    tickerObj.company = company
+                tickerObj.company = company
 
-                    tickerObj.marketcap = marketcap
-                else:
-                    # If the ticker is an ETF, then set the sector to "ETF" ()
-                    tickerObj.sector = quoteType
+                tickerObj.marketcap = marketcap
+            else:
+                # If the ticker is an ETF, then set the sector to "ETF"
+                tickerObj.sector = quoteType
 
-                # Save the changes to the database
-                tickerObj.save()
+            # Save the changes to the database
+            tickerObj.save()
     
-                return tickerObj
-        except:
-            return tickerObj
+
+        return tickerObj
 
     except Exception as e:
         logging.error("Error while creating a stock ticker object")
