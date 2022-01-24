@@ -60,8 +60,5 @@ Run Server
 $ python manage.py runserver
 ```
 
-# Documentation
-
-View the [Documentation](https://insiderunlocked.herokuapp.com/docs/)
 # License
 [MIT](https://tldrlegal.com/license/mit-license)
