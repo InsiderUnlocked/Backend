@@ -224,8 +224,6 @@ def main(startDate):
     # Get Reports
     records = getReports(CSRF, start, reportType, startDate, lastName)
 
-
-
     df = pd.DataFrame(tableData, columns =['Name', 'Notification Date', 'Link', 'Transaction Date', 'Owner', 'Ticker', 'Asset Name', 'Asset Type', 'Type', 'Amount', 'Comment']) 
 
     # pandas dataframe to json
@@ -239,3 +237,4 @@ def main(startDate):
     
     return parsedJson
 
+# main("1/1/2018")

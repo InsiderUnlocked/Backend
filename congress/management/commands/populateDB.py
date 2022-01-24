@@ -39,7 +39,7 @@ class Command(BaseCommand):
             logging.error("Updating Tickers table")
             logging.error(e)
 
-        print("done")
+        # print("done")
         # Load the transactions into the database from the transactions.json file and add it to the database
         try: 
             try:

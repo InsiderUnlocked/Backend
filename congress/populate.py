@@ -52,13 +52,13 @@ def getCongressPerson(name):
     try:
         # find congress person object in database table CongressPerson
         # "Collins, Susan M. (Senator)" --> "Susan M. Collins"
-        name = name.replace(" (Senator)", "")
-
         # add everything before the comma to everything after the comma
         name =  name.split(',')[-1] + " " + name.split(',')[0]
 
         # remove trailing whitespace
         name = name.strip()
+        # replace commas
+        name = name.replace(",", "")
 
         # get the first and last name by 
         firstName = name.split()[0]
@@ -66,19 +66,20 @@ def getCongressPerson(name):
 
         # Django Search-Bar-Like Functionality to match a name to a congress person object from the database
         # https://docs.djangoproject.com/en/dev/ref/contrib/admin/#django.contrib.admin.ModelAdmin.search_fields
-        congressPersonObj = CongressPerson.objects.filter(Q(fullName__icontains=name) | Q(firstName__icontains=firstName) & Q(lastName__icontains=lastName)).first()
+        congressPerson = CongressPerson.objects.filter(Q(fullName__icontains=name) | Q(firstName__icontains=firstName) | Q(lastName__icontains=lastName)).first()
+        
         # congressPerson = CongressPerson.objects.filter(
-            # Q(fullName__icontains=name) | 
-            # Q(firstName__icontains=name) | 
-            # Q(lastName__icontains=name) |
+        #     Q(fullName__icontains=name) | 
+        #     Q(firstName__icontains=name) | 
+        #     Q(lastName__icontains=name) |
 
-            # Q(fullName__icontains=firstName) | 
-            # Q(firstName__icontains=firstName) | 
-            # Q(lastName__icontains=firstName) |
+        #     Q(fullName__icontains=firstName) | 
+        #     Q(firstName__icontains=firstName) | 
+        #     Q(lastName__icontains=firstName) |
 
-            # Q(fullName__icontains=lastName) | 
-            # Q(firstName__icontains=lastName) | 
-            # Q(lastName__icontains=lastName)
+        #     Q(fullName__icontains=lastName) | 
+        #     Q(firstName__icontains=lastName) | 
+        #     Q(lastName__icontains=lastName)
         # ).first()
 
         return congressPerson
@@ -94,7 +95,7 @@ def getCongressPerson(name):
 def updateDB(data):
     congressTradesObjs = []
 
-    for row in data:
+    for i, row in enumerate(data):
         # Get all values in a variable
         name = row['Name']
 
@@ -112,14 +113,11 @@ def updateDB(data):
         comment = row['Comment']
 
         # check if assetName contains a list
+        assetDetails = None
         if type(assetDescription) == list:
             # Check for Rates/Matures, and Options details
             if "Rates/Matures" in assetDescription[1][0].lower() or "put" in assetDescription[1][0].lower() or "call" in assetDescription[1][0].lower():
-                # assetDetails = assetDescription[1][0]
                 assetDetails = " ".join(assetDescription[1])
-            
-            else:
-                assetDetails = None
             
             assetDescription = assetDescription[0]
 
@@ -146,8 +144,10 @@ def updateDB(data):
                     ptrLink=source
                 )
             )            
-            print(name)
 
+            if congressPerson == None:
+                print(name)
+                
         except Exception as e:
             # There is an overlap in dates, so a UNIQUE constraint error will be thrown, but should be ignored
             logging.error("Error while creating a congress trade object")
