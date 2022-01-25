@@ -1,4 +1,4 @@
-# @Author: Farhan Rehman
+# @Author: Farhan Rehman & Mohammed Al-RAsheed
 # Purpose: The purpose of this script is to populate the database with historical data, and then update the database with the current data.
 
 # Imports
@@ -13,7 +13,7 @@ import logging
 import json
 import time
 
-# Get or Create Ticker Object
+# Get or Create Ticker Object - Mohammed Al-Rasheed
 # Parameter: ticker (string)
 def getTicker(stockTicker):
     try:
@@ -60,7 +60,7 @@ def getTicker(stockTicker):
         logging.error(e)
 
 
-# Get or Create Congress Person Object
+# Get or Create Congress Person Object - Farhan Rehman
 # Parameter: name (string)
 def getCongressPerson(name):
     try:
@@ -87,7 +87,7 @@ def getCongressPerson(name):
         # Do not add the transaction to the database if we dont know who it belongs to. Log the data and review the edge case later.
         return None
 
-# Update Database
+# Update Database - Mohammed Al-Rasheed
 # Parameter: data (json)
 def updateDB(data):
     congressTradesObjs = []
@@ -161,7 +161,7 @@ def updateDB(data):
     # Bulk create all the objects
     CongressTrade.objects.bulk_create(congressTradesObjs, ignore_conflicts=True)
 
-# update all the ticker objects
+# update all the ticker objects - Farhan Rehman
 def updateTickerStats():
     # Get all the tickers objects
     tickerObjs = Ticker.objects.all()
@@ -170,7 +170,7 @@ def updateTickerStats():
         # update each tickers stats
         ticker.updateStats()
 
-# update all the congressperson objects
+# update all the congressperson objects - Mohammed Al-Rasheed
 def updateCongressPersonStats():
     # Get all the congressperson objects
     congressPersonObjs = CongressPerson.objects.all()
@@ -179,6 +179,7 @@ def updateCongressPersonStats():
         # update each congressperson stats
         congressPerson.updateStats()
 
+# Load historical data - Farhan Rehman
 def historical():
     # Load historical data  
     data = json.load(open("./congress/scripts/data/transactions.json"))
@@ -188,9 +189,8 @@ def historical():
     updateTickerStats()
     updateCongressPersonStats()
 
+# Load current data using senator script - Farhan Rehman
 def current():
-    # use senators script to get current data  
-    
     # get todays date and format to month/day/year as thats the only format the API accepts
     today = datetime.datetime.today().strftime('%m-%d-%Y')
     
