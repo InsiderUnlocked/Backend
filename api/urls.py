@@ -25,10 +25,9 @@ admin_site = OTPAdmin(name='OTPAdmin')
 admin_site.register(User)
 admin_site.register(TOTPDevice)
 
-from django_otp.admin import OTPAdminSite
 admin.site.__class__ = OTPAdminSite
 
-# Auto Docs
+# Creating Documentation for the API
 schema_view = get_schema_view(
    openapi.Info(
       title="Insider Unlocked",
