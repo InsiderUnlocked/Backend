@@ -35,7 +35,7 @@ class AllCongressViewSet(viewsets.ModelViewSet):
     ordering = ['-transactionDate']
 
 
-# government/congress-all endpoint
+# government/congress-all endpoint - Farhan Rehman
 # Returns all of the Congress Peoples Profiles who have made at least one transaction
 class AllCongressPeopleViewSet(viewsets.ModelViewSet):
     # Permission needed to access endpoint
@@ -52,7 +52,7 @@ class AllCongressPeopleViewSet(viewsets.ModelViewSet):
     # Searching by full name
     search_fields = ['fullName']
 
-# government/ticker endpoint
+# government/ticker endpoint - Mohammed Al-Rasheed
 # Returns all of transactions that involved a specific ticker which is passed in the URL
 class TickerViewSet(viewsets.ModelViewSet):
     # Permission needed to access endpoint
@@ -199,7 +199,7 @@ class TickerStatsViewSet(viewsets.ModelViewSet):
         # Return the serialized and paginated data
         return self.get_paginated_response(serializer.data)
 
-# government/congress-stats
+# government/congress-stats - Farhan Rehman
 class CongressStatsViewSet(viewsets.ModelViewSet):
 # Permission needed to access endpoint
     permission_classes = (permissions.AllowAny,)
