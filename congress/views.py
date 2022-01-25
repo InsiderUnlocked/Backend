@@ -1,4 +1,4 @@
-# @Author Farhan Rehman
+# @Author Farhan Rehman & Mohammed Al-Rasheed
 
 # Imports
 from django_filters.rest_framework import DjangoFilterBackend
@@ -13,7 +13,7 @@ from rest_framework import filters
 from .serializers import CongressPersonSerializer, CongressTradeSerializer, SummaryStatSerializer, TickerSerializer
 from .models import CongressPerson, CongressTrade, Ticker, SummaryStat
 
-# government/congress-trades endpoint
+# government/congress-trades endpoint - Mohammed Al-Rasheed
 # Returns all of the Congress Transactions
 class AllCongressViewSet(viewsets.ModelViewSet):
     # Permission needed to access endpoint
@@ -107,7 +107,7 @@ class TickerViewSet(viewsets.ModelViewSet):
         # Return the serialized and paginated data
         return self.get_paginated_response(serializer.data)
 
-# government/congress-trades endpoint
+# government/congress-trades endpoint - Farhan Rehman
 # Returns all of the Congress Transactions
 class CongressPersonViewSet(viewsets.ModelViewSet):
 
@@ -164,7 +164,7 @@ class CongressPersonViewSet(viewsets.ModelViewSet):
         # Return the serialized and paginated data
         return self.get_paginated_response(serializer.data)
 
-# government/ticker endpoint
+# government/ticker endpoint - Mohammed Al-Rasheed
 class TickerStatsViewSet(viewsets.ModelViewSet):
 # Permission needed to access endpoint
     permission_classes = (permissions.AllowAny,)
@@ -233,7 +233,7 @@ class CongressStatsViewSet(viewsets.ModelViewSet):
         return self.get_paginated_response(serializer.data)
 
 
-# government/summary-stats endpoint
+# government/summary-stats endpoint - Farhan Rehman
 class SummaryStatsViewSet(viewsets.ModelViewSet):
     # Permission needed to access endpoint
     permission_classes = (permissions.AllowAny,)
