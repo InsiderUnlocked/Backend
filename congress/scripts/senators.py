@@ -2,7 +2,7 @@
 # Purpose: This file will scrape data from the Senate website and return the data asJSON 
 
 # Import Libraries
-from cleanText import cleanText
+from .cleanText import cleanText
 from bs4 import BeautifulSoup
 import pandas as pd
 import requests
@@ -232,11 +232,11 @@ def main(startDate):
     parsedJson = json.loads(dfJson)
 
     # Write to json file
-    # outfile = open('transactions.json', 'a', encoding='utf-8')
-    # outfile.write(json.dumps(parsedJson, ensure_ascii=False, indent=4))
-    # # outfile.write(",\n")
-    # outfile.close()
+    outfile = open('transactions.json', 'a', encoding='utf-8')
+    outfile.write(json.dumps(parsedJson, ensure_ascii=False, indent=4))
+    outfile.close()
     
     return parsedJson
+    
 # run to populate from scratch
 main("1/1/2012")
