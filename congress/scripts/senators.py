@@ -238,3 +238,5 @@ def main(startDate):
     # outfile.close()
     
     return parsedJson
+# run to populate from scratch
+main("1/1/2012")
