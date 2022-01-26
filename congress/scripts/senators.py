@@ -2,7 +2,7 @@
 # Purpose: This file will scrape data from the Senate website and return the data asJSON 
 
 # Import Libraries
-from .cleanText import cleanText
+from cleanText import cleanText
 from bs4 import BeautifulSoup
 import pandas as pd
 import requests
