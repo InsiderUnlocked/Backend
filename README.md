@@ -50,6 +50,11 @@ $ python manage.py makemigrations
 $ python manage.py migrate
 ```
 
+Create an admin user with the following command
+```console
+$ python manage.py createsuperuser
+```
+
 Populate Database(Note senators info have to be uploaded individually as there is no API or website that gives all the info correctly)
 ```console
 $ python manage.py populateDB
