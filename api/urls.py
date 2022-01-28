@@ -18,14 +18,15 @@ from drf_yasg import openapi
 
 
 # OTP implementation
-class OTPAdmin(OTPAdminSite):
-    pass
+# You need to create an admin user, login on the /aprivatesocialmeet page, and register your device under the TOTP Devices page
+# class OTPAdmin(OTPAdminSite):
+#    pass
 
-admin_site = OTPAdmin(name='OTPAdmin')
-admin_site.register(User)
-admin_site.register(TOTPDevice)
+# admin_site = OTPAdmin(name='OTPAdmin')
+# admin_site.register(User)
+# admin_site.register(TOTPDevice)
 
-admin.site.__class__ = OTPAdminSite
+# admin.site.__class__ = OTPAdminSite
 
 # Creating Documentation for the API
 schema_view = get_schema_view(
