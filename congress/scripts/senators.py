@@ -1,4 +1,4 @@
-# @Author: Farhan  Rehman, Mohammed-Al Rasheed
+# @Author: Mohammed-Al Rasheed
 # Purpose: This file will scrape data from the Senate website and return the data asJSON 
 
 # Import Libraries
@@ -67,7 +67,6 @@ Send a request to the resulting table
 Going through all the pages of the table, the table is paginated iteratively
 # If there are is more than one page in the table we have to detect that and iterate through all the pages(POSSIBLY recursively)
 '''
-# @Author: Farhan Rehman
 def getReports(csrfToken, start, reportType, startDate, lastName):    
     try:
         payload = {
@@ -125,8 +124,6 @@ Scrape all the data from the from each row iteratively as well
 ## We retrieve the html page from the previous request and parse the html file for a table
 ## Than we iterate through the table and store each row in our local database
 '''
-
-# @Author: Farhan Rehman
 # PARSE PERIODIC TRANSAACTION REPORT HTML PAGE
 def parseHTML(csrfToken, link, name, notificationDate):
     try:
