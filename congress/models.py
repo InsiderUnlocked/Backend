@@ -1,4 +1,4 @@
-# @Author Farhan Rehman
+# @Author Mohammed Al-Rasheed
 # Purpose: Initilze the table models for all our endpoints
 
 # Imports 
